@@ -85,8 +85,8 @@ export function ProfileForm({ initialName }: { initialName: string }) {
         <div className="space-y-2">
           <Label htmlFor="college_year">Academic Year</Label>
           <Select 
-            value={yearValue} 
-            onValueChange={(val) => val && setValue("college_year", val, { shouldValidate: true })}
+            value={yearValue || undefined} 
+            onValueChange={(val) => val && setValue("college_year", val as string, { shouldValidate: true })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select year" />

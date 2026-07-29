@@ -83,9 +83,9 @@ function SegmentConnector({
         <div className="bg-muted/30 border border-dashed border-border/60 rounded-lg p-3 space-y-3">
           <div className="space-y-2">
             <Label className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Mode of Transport</Label>
-            <Select
-              value={transportType || ""}
-              onValueChange={(val) => val && onTransportTypeChange(val)}
+            <Select 
+              value={transportType || undefined} 
+              onValueChange={(val) => val && onTransportTypeChange(val as string)}
             >
               <SelectTrigger className="h-9">
                 <SelectValue placeholder="Select transport" />

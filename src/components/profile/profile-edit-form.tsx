@@ -85,7 +85,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
           <Label>Academic Year</Label>
           <Select
             value={collegeYear || undefined}
-            onValueChange={(val) => setValue("college_year", val, { shouldValidate: true })}
+            onValueChange={(val) => val && setValue("college_year", val as string, { shouldValidate: true })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select year" />
