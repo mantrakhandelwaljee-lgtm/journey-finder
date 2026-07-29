@@ -1,65 +1,101 @@
-import Image from "next/image";
+import Link from "next/link"
+import { auth } from "@/auth"
+import { Button } from "@/components/ui/button"
+import { Navbar } from "@/components/layout/navbar"
+import { MapPin, Users, ShieldCheck, ArrowRight } from "lucide-react"
+import { redirect } from "next/navigation"
 
-export default function Home() {
+export default async function LandingPage() {
+  const session = await auth()
+
+  if (session?.user) {
+    if (session.user.isOnboarded) {
+      redirect("/dashboard")
+    } else {
+      redirect("/onboarding")
+    }
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="flex min-h-screen flex-col bg-background">
+      <Navbar />
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="w-full py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-primary/10 via-background to-background relative overflow-hidden">
+          <div className="absolute inset-0 bg-grid-black/[0.02] -z-10" />
+          <div className="container px-4 md:px-6 mx-auto">
+            <div className="flex flex-col items-center space-y-8 text-center">
+              <div className="space-y-4 max-w-3xl">
+                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
+                  Never Travel <span className="text-primary">Alone</span> Again.
+                </h1>
+                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Connect with students heading your way. Share rides to campus, the train station, or home for the holidays. 
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/login">
+                  <Button size="lg" className="h-12 px-8 text-base font-medium rounded-full">
+                    Find a Journey
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button size="lg" variant="outline" className="h-12 px-8 text-base font-medium rounded-full bg-background">
+                    Offer a Ride
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="w-full py-20 bg-muted/30">
+          <div className="container px-4 md:px-6 mx-auto">
+            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="bg-primary/10 p-4 rounded-full">
+                  <ShieldCheck className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold">Verified Students</h3>
+                <p className="text-muted-foreground">
+                  Sign in with your university email. Travel safely with verified peers from your college.
+                </p>
+              </div>
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="bg-primary/10 p-4 rounded-full">
+                  <MapPin className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold">Smart Matching</h3>
+                <p className="text-muted-foreground">
+                  Find journeys that perfectly match your route and schedule, whether commuting or traveling far.
+                </p>
+              </div>
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="bg-primary/10 p-4 rounded-full">
+                  <Users className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold">Cost Sharing</h3>
+                <p className="text-muted-foreground">
+                  Split the cost of cabs and fuel. Make your trips more affordable and eco-friendly.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer className="w-full border-t py-6 bg-background">
+        <div className="container px-4 md:px-6 mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+          <div className="flex items-center space-x-2">
+            <MapPin className="h-5 w-5 text-primary" />
+            <span className="font-semibold">JourneyFinder</span>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            © 2026 JourneyFinder. All rights reserved. Built for students.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
-  );
+  )
 }
