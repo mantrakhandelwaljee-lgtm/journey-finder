@@ -106,7 +106,7 @@ export function SearchFilters() {
             value={transportType}
             onValueChange={(val) => {
               setTransportType(val || "any")
-              const newVal = val === "any" ? undefined : val
+              const newVal = (!val || val === "any") ? undefined : (val as string)
               setValue("transport_type", newVal)
               if (newVal !== "train" && newVal !== "flight") {
                 setValue("transport_number", undefined)
