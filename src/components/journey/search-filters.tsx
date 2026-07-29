@@ -105,7 +105,7 @@ export function SearchFilters() {
           <Select
             value={transportType}
             onValueChange={(val) => {
-              setTransportType(val)
+              setTransportType(val || "any")
               const newVal = val === "any" ? undefined : val
               setValue("transport_type", newVal)
               if (newVal !== "train" && newVal !== "flight") {
