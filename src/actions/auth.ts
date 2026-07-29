@@ -62,7 +62,7 @@ export async function sendOtp(email: string) {
     // Send the email
     const mailTransporter = await getTransporter()
     const info = await mailTransporter.sendMail({
-      from: '"Journey Finder" <noreply@journeyfinder.com>',
+      from: process.env.SMTP_FROM || '"Journey Finder" <onboarding@resend.dev>',
       to: email,
       subject: "Your Journey Finder Login Code",
       text: `Your login code is: ${otp}\n\nIt will expire in 10 minutes.`,
