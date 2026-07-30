@@ -17,6 +17,7 @@ export function HeroMagnifier({
   const containerRef = useRef<HTMLDivElement>(null)
   const [isHovering, setIsHovering] = useState(false)
   const [isTouch, setIsTouch] = useState(false)
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
   
   // Motion values for smooth cursor tracking
   const mouseX = useMotionValue(0)
@@ -28,6 +29,18 @@ export function HeroMagnifier({
 
   useEffect(() => {
     setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0)
+    
+    if (!containerRef.current) return
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setContainerSize({
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        })
+      }
+    })
+    observer.observe(containerRef.current)
+    return () => observer.disconnect()
   }, [])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -87,17 +100,13 @@ export function HeroMagnifier({
           <motion.div
             className="absolute top-0 left-0 origin-top-left pointer-events-none"
             style={{
-              width: "100%",
+              width: containerSize.width || "100%",
+              height: containerSize.height || "100%",
               x: innerX,
               y: innerY,
               scale: scale,
             }}
           >
-            {/* 
-              Re-rendering children here so it aligns perfectly.
-              This guarantees crisp text rendering at 2x scale because it's real text,
-              not an image or canvas snapshot.
-            */}
             {children}
           </motion.div>
         </motion.div>
