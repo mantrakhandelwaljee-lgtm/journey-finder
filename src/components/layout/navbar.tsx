@@ -22,19 +22,19 @@ export async function Navbar() {
             <nav className="hidden md:flex gap-6">
               <Link
                 href="/dashboard"
-                className="flex items-center text-sm font-semibold text-foreground/80 hover:text-foreground transition-colors"
+                className="flex items-center text-xs font-bold tracking-wider uppercase text-foreground/80 hover:text-foreground transition-colors"
               >
                 Dashboard
               </Link>
               <Link
                 href="/search"
-                className="flex items-center text-sm font-semibold text-foreground/80 hover:text-foreground transition-colors"
+                className="flex items-center text-xs font-bold tracking-wider uppercase text-foreground/80 hover:text-foreground transition-colors"
               >
                 Find Journeys
               </Link>
               <Link
                 href="/profile"
-                className="flex items-center text-sm font-semibold text-foreground/80 hover:text-foreground transition-colors"
+                className="flex items-center text-xs font-bold tracking-wider uppercase text-foreground/80 hover:text-foreground transition-colors"
               >
                 Profile
               </Link>
@@ -46,7 +46,7 @@ export async function Navbar() {
           {session?.user?.isOnboarded ? (
             <>
               <Link href="/publish" className="hidden sm:block">
-                <Button variant="default" size="sm" className="transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+                <Button variant="default" size="sm" className="transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_-5px_rgba(249,115,22,0.3)] hover:bg-primary/95">
                   <PlusCircle className="mr-2 h-4 w-4" />
                   Publish Journey
                 </Button>
@@ -58,10 +58,10 @@ export async function Navbar() {
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/login">
-                <Button variant="ghost" size="sm" className="font-semibold transition-all duration-300 hover:bg-muted/50">Log in</Button>
+                <Button variant="ghost" size="sm" className="text-xs font-bold tracking-wider uppercase transition-all duration-300 hover:bg-muted/50">Log in</Button>
               </Link>
               <Link href="/login">
-                <Button variant="default" size="sm" className="font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">Get Started</Button>
+                <Button variant="default" size="sm" className="text-xs font-bold tracking-wider uppercase transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_-5px_rgba(249,115,22,0.3)] hover:bg-primary/95">Get Started</Button>
               </Link>
             </div>
           )}
