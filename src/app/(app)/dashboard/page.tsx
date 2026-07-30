@@ -20,7 +20,7 @@ export default async function DashboardPage() {
   const supabase = await createClient()
 
   // Fetch all upcoming available journeys for the carousel
-  const { data: allJourneys } = await (supabase.from('journeys') as any)
+  const { data: allJourneys, error } = await (supabase.from('journeys') as any)
     .select(`
       *,
       users:user_id (
@@ -32,6 +32,10 @@ export default async function DashboardPage() {
     `)
     .order('departure_time', { ascending: false })
     .limit(10)
+    
+  if (error) {
+    console.error("Supabase Error fetching journeys:", error)
+  }
 
   return (
     <div className="container max-w-6xl mx-auto py-10 px-4">
@@ -73,6 +77,12 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="bg-white/40 border border-[#D8C8B9]/50 rounded-2xl p-12 text-center backdrop-blur-md max-w-2xl mx-auto mt-12 shadow-sm">
+              {error ? (
+                <div className="text-red-500 mb-4 p-4 bg-red-50 rounded-lg">
+                  <h3 className="font-bold">Database Error:</h3>
+                  <p>{error.message || JSON.stringify(error)}</p>
+                </div>
+              ) : null}
               <h3 className="text-xl font-medium mb-2 text-[#2B211B]">No journeys available right now</h3>
               <p className="text-[#51443B] mb-6">
                 Be the first to share your travel plans and find companions to travel with.
