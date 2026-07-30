@@ -14,7 +14,7 @@ export default async function AppLayout({
   }
   
   return (
-    <div className="flex min-h-screen flex-col bg-muted/20">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-[#ffe0cc]/80 via-[#fff4ed]/80 to-background">
       <Navbar />
       <main className="flex-1">
         {children}
