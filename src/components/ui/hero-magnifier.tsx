@@ -11,8 +11,8 @@ interface HeroMagnifierProps {
 
 export function HeroMagnifier({ 
   children, 
-  magnifierSize = 220, 
-  scale = 2 
+  magnifierSize = 190, 
+  scale = 1.5 
 }: HeroMagnifierProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isHovering, setIsHovering] = useState(false)
