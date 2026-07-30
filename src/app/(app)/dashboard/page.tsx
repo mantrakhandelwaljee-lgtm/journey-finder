@@ -30,8 +30,7 @@ export default async function DashboardPage() {
         college_year
       )
     `)
-    .gte('departure_time', new Date().toISOString())
-    .order('departure_time', { ascending: true })
+    .order('departure_time', { ascending: false })
     .limit(10)
 
   return (
