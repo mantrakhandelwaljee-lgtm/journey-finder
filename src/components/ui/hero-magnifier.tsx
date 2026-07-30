@@ -11,7 +11,7 @@ interface HeroMagnifierProps {
 
 export function HeroMagnifier({ 
   children, 
-  magnifierSize = 160, 
+  magnifierSize = 220, 
   scale = 2 
 }: HeroMagnifierProps) {
   const containerRef = useRef<HTMLDivElement>(null)
