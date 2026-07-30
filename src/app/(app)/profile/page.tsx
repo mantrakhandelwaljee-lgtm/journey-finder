@@ -82,7 +82,7 @@ export default async function ProfilePage() {
                 {profile?.college_year && (
                   <div className="flex items-center gap-3 text-muted-foreground">
                     <Calendar className="w-4 h-4 shrink-0" />
-                    <span>Year {profile.college_year}</span>
+                    <span>{profile.college_year}</span>
                   </div>
                 )}
                 {profile?.branch && (

@@ -113,8 +113,15 @@ function SegmentConnector({
                 className="h-9"
                 placeholder={transportNumberPlaceholder(transportType)}
                 value={transportNumber || ""}
-                onChange={(e) => onTransportNumberChange(e.target.value)}
+                onChange={(e) => {
+                  let val = e.target.value;
+                  if (transportType === "flight") val = val.toUpperCase();
+                  onTransportNumberChange(val)
+                }}
               />
+              {transportType === "flight" && (
+                <p className="text-[10px] text-muted-foreground">Format: Airline Code - Flight Number (e.g. AI-302, 6E-2155)</p>
+              )}
               {errors?.transport_number && <p className="text-xs text-destructive">{errors.transport_number.message}</p>}
             </div>
           )}
@@ -349,8 +356,8 @@ export function PublishForm({ initialData, journeyId }: PublishFormProps = {}) {
               variant="outline"
               onClick={() => append({
                 location: { name: "", lat: 0, lng: 0 },
-                arrival_time: new Date(),
-                departure_time: new Date(),
+                arrival_time: undefined as any,
+                departure_time: undefined as any,
                 transport_type: "",
                 transport_number: "",
               })}
