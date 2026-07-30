@@ -15,7 +15,7 @@ export async function Navbar() {
             <div className="bg-primary p-1 rounded-md">
               <MapPin className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="font-bold inline-block">JourneyFinder</span>
+            <span className="font-extrabold text-xl tracking-tight inline-block">JourneyFinder</span>
           </Link>
           
           {session?.user?.isOnboarded && (
