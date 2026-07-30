@@ -102,29 +102,31 @@ export function SearchFilters() {
         </div>
         <div className="space-y-2">
           <Label>Transport</Label>
-          <Select
-            value={transportType}
-            onValueChange={(val) => {
-              setTransportType(val || "any")
-              const newVal = (!val || val === "any") ? undefined : (val as string)
-              setValue("transport_type", newVal)
-              if (newVal !== "train" && newVal !== "flight") {
-                setValue("transport_number", undefined)
-              }
-            }}
-          >
-            <SelectTrigger className="w-full h-10 capitalize">
-              <SelectValue placeholder="Any mode" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="any">Any mode</SelectItem>
-              <SelectItem value="car">Car / Ride Share</SelectItem>
-              <SelectItem value="train">Train</SelectItem>
-              <SelectItem value="bus">Bus</SelectItem>
-              <SelectItem value="flight">Flight</SelectItem>
-              <SelectItem value="auto">Auto</SelectItem>
-            </SelectContent>
-          </Select>
+          <div>
+            <Select
+              value={transportType}
+              onValueChange={(val) => {
+                setTransportType(val || "any")
+                const newVal = (!val || val === "any") ? undefined : (val as string)
+                setValue("transport_type", newVal)
+                if (newVal !== "train" && newVal !== "flight") {
+                  setValue("transport_number", undefined)
+                }
+              }}
+            >
+              <SelectTrigger className="w-full h-10 capitalize">
+                <SelectValue placeholder="Any mode" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="any">Any mode</SelectItem>
+                <SelectItem value="car">Car / Ride Share</SelectItem>
+                <SelectItem value="train">Train</SelectItem>
+                <SelectItem value="bus">Bus</SelectItem>
+                <SelectItem value="flight">Flight</SelectItem>
+                <SelectItem value="auto">Auto</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <Button type="submit" disabled={isSearching} className="w-full h-10">
           <Search className="w-4 h-4 mr-2" />
