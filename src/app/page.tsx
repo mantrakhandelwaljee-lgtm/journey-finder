@@ -23,7 +23,7 @@ export default async function LandingPage() {
       <Navbar />
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-primary/10 via-background to-background relative overflow-hidden">
+        <section className="w-full py-24 lg:py-32 xl:py-48 bg-gradient-to-br from-[#fff4ed] via-[#ffe4d6] to-background relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-black/[0.02] -z-10" />
           <div className="container px-4 md:px-6 mx-auto">
             <div className="flex flex-col items-center space-y-8 text-center">
@@ -37,13 +37,13 @@ export default async function LandingPage() {
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/login">
-                  <Button size="lg" className="h-12 px-8 text-base font-medium rounded-full">
+                  <Button size="lg" className="h-12 px-8 text-base font-medium rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-primary/90">
                     Find a Journey
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
                 <Link href="/login">
-                  <Button size="lg" variant="outline" className="h-12 px-8 text-base font-medium rounded-full bg-background">
+                  <Button size="lg" variant="outline" className="h-12 px-8 text-base font-medium rounded-full bg-background transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-background">
                     Offer a Ride
                   </Button>
                 </Link>
