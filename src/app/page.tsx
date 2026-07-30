@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Navbar } from "@/components/layout/navbar"
 import { MapPin, Users, ShieldCheck, ArrowRight } from "lucide-react"
 import { redirect } from "next/navigation"
+import { SplashScreen } from "@/components/ui/splash-screen"
 
 export default async function LandingPage() {
   const session = await auth()
@@ -18,6 +19,7 @@ export default async function LandingPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SplashScreen />
       <Navbar />
       <main className="flex-1">
         {/* Hero Section */}
