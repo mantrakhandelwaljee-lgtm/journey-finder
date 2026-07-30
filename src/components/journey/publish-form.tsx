@@ -87,7 +87,7 @@ function SegmentConnector({
               value={transportType || undefined} 
               onValueChange={(val) => val && onTransportTypeChange(val as string)}
             >
-              <SelectTrigger className="h-9">
+              <SelectTrigger className="w-full capitalize h-9">
                 <SelectValue placeholder="Select transport" />
               </SelectTrigger>
               <SelectContent>

@@ -45,8 +45,7 @@ export function ProfileForm({ initialName }: { initialName: string }) {
         // Trigger a session update to refresh the isOnboarded status
         await update({ isOnboarded: true })
         toast.success("Profile saved successfully!")
-        router.push("/dashboard")
-        router.refresh()
+        window.location.href = "/dashboard"
       } else {
         toast.error(result.error || "Something went wrong")
       }

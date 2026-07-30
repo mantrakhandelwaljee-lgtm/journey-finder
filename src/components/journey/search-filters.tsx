@@ -113,7 +113,7 @@ export function SearchFilters() {
               }
             }}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-full h-10 capitalize">
               <SelectValue placeholder="Any mode" />
             </SelectTrigger>
             <SelectContent>
@@ -122,6 +122,7 @@ export function SearchFilters() {
               <SelectItem value="train">Train</SelectItem>
               <SelectItem value="bus">Bus</SelectItem>
               <SelectItem value="flight">Flight</SelectItem>
+              <SelectItem value="auto">Auto</SelectItem>
             </SelectContent>
           </Select>
         </div>
