@@ -47,7 +47,7 @@ export function HeroMagnifier({
   return (
     <div 
       ref={containerRef}
-      className="relative inline-block cursor-default"
+      className="relative block w-full cursor-default"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => !isTouch && setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
@@ -68,11 +68,11 @@ export function HeroMagnifier({
             top: springY,
             x: "-50%", // Center the bubble on the cursor
             y: "-50%",
-            background: "rgba(255,255,255,0.08)",
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-            border: "1px solid rgba(255,255,255,0.3)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.12), inset 0 0 20px rgba(255,255,255,0.4), 0 0 15px rgba(255,255,255,0.2)",
+            background: "rgba(255,255,255,0.15)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            border: "1px solid rgba(255,255,255,0.4)",
+            boxShadow: "0 15px 35px rgba(0,0,0,0.1), inset 0 0 40px rgba(255,255,255,0.5), inset 0 4px 10px rgba(255,255,255,0.8)",
             opacity: isHovering ? 1 : 0,
             scale: isHovering ? 1 : 0.9,
           }}
@@ -87,6 +87,7 @@ export function HeroMagnifier({
           <motion.div
             className="absolute top-0 left-0 origin-top-left pointer-events-none"
             style={{
+              width: "100%",
               x: innerX,
               y: innerY,
               scale: scale,
