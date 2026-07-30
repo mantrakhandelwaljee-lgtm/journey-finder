@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/navbar"
 import { MapPin, Users, ShieldCheck, ArrowRight } from "lucide-react"
 import { redirect } from "next/navigation"
 import { SplashScreen } from "@/components/ui/splash-screen"
+import { HeroMagnifier } from "@/components/ui/hero-magnifier"
 
 export default async function LandingPage() {
   const session = await auth()
@@ -28,9 +29,11 @@ export default async function LandingPage() {
           <div className="container px-4 md:px-6 mx-auto">
             <div className="flex flex-col items-center space-y-8 text-center">
               <div className="space-y-4 max-w-3xl">
-                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-                  Never Travel <span className="text-primary">Alone</span> Again.
-                </h1>
+                <HeroMagnifier>
+                  <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
+                    Never Travel <span className="text-primary">Alone</span> Again.
+                  </h1>
+                </HeroMagnifier>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Connect with students heading your way. Share rides to campus, the train station, or home for the holidays. 
                 </p>
