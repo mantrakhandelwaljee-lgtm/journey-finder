@@ -4,13 +4,13 @@ import { JourneyRadialCard } from "@/components/journey/journey-radial-card"
 import { useRouter } from "next/navigation"
 
 // ── Configuration ───────────────────────────────────────────────────
-const ORBIT_RADIUS = 380       // px – ring radius
-const TILT_X = 60              // deg – ring lean (into the screen)
-const TILT_Y = 10              // deg – slight sideways tilt
-const IDLE_SPEED = 360 / 21    // deg/s – one revolution ≈ 21 s
-const DRAG_SENS = 0.3          // px → deg conversion
-const MOMENTUM = 0.35          // how much drag velocity carries over
-const FRICTION = 0.96          // per-frame velocity decay while hovering
+const RADIUS_X = 420        // wide horizontal spread (oval width)
+const RADIUS_Z = 200        // shallow depth (oval depth) → creates the oval
+const TILT_X = 8            // subtle top-down perspective tilt
+const IDLE_SPEED = 360 / 22 // deg/s – ~22s per revolution
+const DRAG_SENS = 0.3
+const MOMENTUM = 0.35
+const FRICTION = 0.96
 
 // ── Component ───────────────────────────────────────────────────────
 export function RadialCarousel({ items }: { items: any[] }) {
@@ -20,7 +20,7 @@ export function RadialCarousel({ items }: { items: any[] }) {
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  /* ---------- animation refs (never cause re-renders) ---------- */
+  // Animation refs (mutated in RAF — never trigger re-renders)
   const rotRef = useRef(0)
   const velRef = useRef(IDLE_SPEED)
   const isDrag = useRef(false)
@@ -32,11 +32,11 @@ export function RadialCarousel({ items }: { items: any[] }) {
   const dragOriginX = useRef(0)
   const dragMoved = useRef(false)
 
-  /* ---------- React state (triggers render) ---------- */
+  // React state (triggers render)
   const [rot, setRot] = useState(0)
   const [hovered, setHovered] = useState<number | null>(null)
 
-  /* ────────────── requestAnimationFrame loop ─────────────── */
+  /* ──────── requestAnimationFrame loop ──────── */
   useEffect(() => {
     let id: number
     const tick = (t: number) => {
@@ -61,7 +61,7 @@ export function RadialCarousel({ items }: { items: any[] }) {
     return () => cancelAnimationFrame(id)
   }, [])
 
-  /* ────────────── mouse-wheel ─────────────── */
+  /* ──────── mouse wheel ──────── */
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -74,7 +74,7 @@ export function RadialCarousel({ items }: { items: any[] }) {
     return () => el.removeEventListener("wheel", onWheel)
   }, [])
 
-  /* ────────────── pointer drag ─────────────── */
+  /* ──────── pointer drag ──────── */
   const onDown = useCallback((e: React.PointerEvent) => {
     isDrag.current = true
     dragMoved.current = false
@@ -104,12 +104,6 @@ export function RadialCarousel({ items }: { items: any[] }) {
     velRef.current = dragVel.current * MOMENTUM
   }, [])
 
-  /* ────────────── depth helper ─────────────── */
-  const depthOf = (i: number): number => {
-    const rad = ((i * step + rot) * Math.PI) / 180
-    return (Math.cos(rad) + 1) / 2 // 0 = back, 1 = front
-  }
-
   if (!items || items.length === 0) return null
 
   return (
@@ -117,9 +111,9 @@ export function RadialCarousel({ items }: { items: any[] }) {
       ref={containerRef}
       className="relative w-full flex items-center justify-center select-none"
       style={{
-        perspective: "2000px",
-        height: "620px",
-        cursor: isDrag.current ? "grabbing" : "grab",
+        perspective: "1800px",
+        height: "560px",
+        cursor: "grab",
       }}
       onPointerDown={onDown}
       onPointerMove={onMove}
@@ -128,31 +122,42 @@ export function RadialCarousel({ items }: { items: any[] }) {
       onMouseEnter={() => { isHover.current = true }}
       onMouseLeave={() => { isHover.current = false; setHovered(null) }}
     >
-      {/* ── 3-D stage (preserve-3d so browser handles z-sort) ── */}
+      {/* 3-D stage with subtle top-down tilt */}
       <div
         style={{
           transformStyle: "preserve-3d",
+          transform: `rotateX(${TILT_X}deg)`,
           position: "absolute",
           width: 0,
           height: 0,
         }}
       >
         {items.map((journey, i) => {
-          const totalAngle = i * step + rot + TILT_Y
-          const d = depthOf(i)
+          const totalAngle = i * step + rot
+          const totalRad = (totalAngle * Math.PI) / 180
+
+          // ── elliptical orbit position ──
+          const x = Math.sin(totalRad) * RADIUS_X
+          const z = Math.cos(totalRad) * RADIUS_Z
+
+          // ── depth factor: 1 = front, 0 = back ──
+          const depthRaw = Math.cos(totalRad)
+          const d = (depthRaw + 1) / 2
+
           const isH = hovered === i
+          const isActive = d > 0.9
 
           // ── depth-based styling ──
-          const s = isH ? 1.2 : 0.82 + d * 0.36     // 0.82 → 1.18
-          const op = isH ? 1 : 0.55 + d * 0.45       // 0.55 → 1.0
-          const bl = isH ? 0 : Math.max(0, (1 - d) * 3) // 0 → 3 px
-          const bright = 0.85 + d * 0.15              // 0.85 → 1.0
-          const lift = isH ? 30 : 0                   // hover lift
+          const s = isH ? 1.12 : 0.8 + d * 0.28        // 0.80 → 1.08
+          const op = 0.35 + d * 0.65                     // 0.35 → 1.0
+          const bl = isH ? 0 : Math.max(0, (1 - d) * 3) // 0 → 3px
+          const bright = 0.75 + d * 0.25                 // 0.75 → 1.0
+          const lift = isH ? 35 : 0
 
-          // ── shadow ──
-          const shOp = (0.06 + d * 0.2).toFixed(2)
-          const shBl = Math.round(8 + d * 24)
-          const shY = Math.round(4 + d * 12)
+          // ── shadow (stronger at front) ──
+          const shOp = (0.06 + d * 0.22).toFixed(2)
+          const shBl = Math.round(8 + d * 28)
+          const shY = Math.round(4 + d * 14)
 
           return (
             <div
@@ -161,30 +166,30 @@ export function RadialCarousel({ items }: { items: any[] }) {
                 position: "absolute",
                 transformStyle: "preserve-3d",
                 /*
-                 * 1. rotateX / rotateY  → tilt the ring + position the card
-                 * 2. translateZ          → push card out to orbit radius
-                 * 3. counter-rotate      → billboard the card toward the camera
-                 * 4. scale3d             → depth-based sizing
+                 * 1. translateX + translateZ → position on the elliptical orbit
+                 * 2. rotateY(-totalAngle)    → card rotates WITH the orbit
+                 *    • front (0°):   faces camera
+                 *    • sides (±90°): shows edge
+                 *    • back (180°):  faces away
+                 * 3. scale3d → depth-based sizing
                  */
                 transform: `
-                  rotateX(${TILT_X}deg)
-                  rotateY(${totalAngle}deg)
-                  translateZ(${ORBIT_RADIUS + lift}px)
+                  translateX(${x}px)
+                  translateZ(${z + lift}px)
                   rotateY(${-totalAngle}deg)
-                  rotateX(${-TILT_X}deg)
                   scale3d(${s}, ${s}, 1)
                 `,
                 filter: `blur(${bl}px) brightness(${bright})`,
                 opacity: op,
                 willChange: "transform, opacity, filter",
-                left: "-85px",
-                top: "-105px",
-                pointerEvents: "auto",
+                left: "-120px",
+                top: "-150px",
+                pointerEvents: d > 0.3 ? "auto" : "none",
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
               onClick={(e) => {
-                if (!dragMoved.current) {
+                if (!dragMoved.current && d > 0.5) {
                   e.stopPropagation()
                   router.push(`/journey/${journey.id}`)
                 }
@@ -197,13 +202,13 @@ export function RadialCarousel({ items }: { items: any[] }) {
                         parseFloat(shOp) + 0.12
                       }), 0 0 24px rgba(183,123,93,0.2)`
                     : `0 ${shY}px ${shBl}px rgba(0,0,0,${shOp})`,
-                  borderRadius: "12px",
+                  borderRadius: "16px",
                   transition: "box-shadow 0.25s ease",
                 }}
               >
                 <JourneyRadialCard
                   journey={journey}
-                  isActive={d > 0.85}
+                  isActive={isActive}
                   onClick={() => {}}
                 />
               </div>
