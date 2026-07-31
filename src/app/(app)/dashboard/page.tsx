@@ -1,6 +1,6 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { RadialCarousel } from "@/components/ui/radial-carousel"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -17,7 +17,7 @@ export default async function DashboardPage() {
     redirect("/onboarding")
   }
 
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   // Fetch all upcoming available journeys for the carousel
   const { data: allJourneys, error } = await (supabase.from('journeys') as any)
@@ -71,17 +71,6 @@ export default async function DashboardPage() {
             </p>
           </div>
           
-          {/* DEBUG: remove after fixing */}
-          <div className="bg-yellow-100 border border-yellow-400 rounded-lg p-4 text-left mb-4 text-sm max-w-2xl mx-auto">
-            <p><strong>Debug:</strong> allJourneys type: {typeof allJourneys}</p>
-            <p>allJourneys is null: {String(allJourneys === null)}</p>
-            <p>allJourneys is array: {String(Array.isArray(allJourneys))}</p>
-            <p>allJourneys length: {allJourneys ? allJourneys.length : 'N/A'}</p>
-            <p>error: {error ? JSON.stringify(error) : 'none'}</p>
-            {allJourneys && allJourneys.length > 0 && (
-              <p>First item id: {allJourneys[0].id}</p>
-            )}
-          </div>
 
           {allJourneys && allJourneys.length > 0 ? (
             <div className="mt-8">
