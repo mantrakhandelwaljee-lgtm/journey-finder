@@ -71,6 +71,18 @@ export default async function DashboardPage() {
             </p>
           </div>
           
+          {/* DEBUG: remove after fixing */}
+          <div className="bg-yellow-100 border border-yellow-400 rounded-lg p-4 text-left mb-4 text-sm max-w-2xl mx-auto">
+            <p><strong>Debug:</strong> allJourneys type: {typeof allJourneys}</p>
+            <p>allJourneys is null: {String(allJourneys === null)}</p>
+            <p>allJourneys is array: {String(Array.isArray(allJourneys))}</p>
+            <p>allJourneys length: {allJourneys ? allJourneys.length : 'N/A'}</p>
+            <p>error: {error ? JSON.stringify(error) : 'none'}</p>
+            {allJourneys && allJourneys.length > 0 && (
+              <p>First item id: {allJourneys[0].id}</p>
+            )}
+          </div>
+
           {allJourneys && allJourneys.length > 0 ? (
             <div className="mt-8">
               <RadialCarousel items={allJourneys} />
