@@ -8,7 +8,7 @@ export function SplashScreen() {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    const duration = 2000;
+    const duration = 1000;
     const intervalTime = 20;
     const steps = duration / intervalTime;
     let currentStep = 0;
@@ -20,7 +20,7 @@ export function SplashScreen() {
 
       if (currentStep >= steps) {
         clearInterval(interval);
-        setTimeout(() => setShow(false), 400);
+        setTimeout(() => setShow(false), 200);
       }
     }, intervalTime)
     
@@ -33,7 +33,7 @@ export function SplashScreen() {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
           className="fixed inset-0 z-[9999] bg-background flex flex-col items-center justify-between p-8 md:p-16"
         >
           {/* Top spacer */}
