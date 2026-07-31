@@ -1,237 +1,216 @@
 "use client"
-import React, { useRef, useState, useEffect } from "react"
-import { motion, useMotionValue, useSpring, useTransform, animate } from "framer-motion"
+import React, { useRef, useState, useEffect, useCallback } from "react"
 import { JourneyRadialCard } from "@/components/journey/journey-radial-card"
 import { useRouter } from "next/navigation"
 
-interface RadialCarouselProps {
-  items: any[]
-  radius?: number
-}
+// ── Configuration ───────────────────────────────────────────────────
+const ORBIT_RADIUS = 380       // px – ring radius
+const TILT_X = 60              // deg – ring lean (into the screen)
+const TILT_Y = 10              // deg – slight sideways tilt
+const IDLE_SPEED = 360 / 21    // deg/s – one revolution ≈ 21 s
+const DRAG_SENS = 0.3          // px → deg conversion
+const MOMENTUM = 0.35          // how much drag velocity carries over
+const FRICTION = 0.96          // per-frame velocity decay while hovering
 
-export function RadialCarousel({ items, radius = 450 }: RadialCarouselProps) {
+// ── Component ───────────────────────────────────────────────────────
+export function RadialCarousel({ items }: { items: any[] }) {
   const router = useRouter()
   const count = items.length
-  
-  // The current rotation of the carousel in degrees
-  const rotationValue = useMotionValue(0)
-  const springRotation = useSpring(rotationValue, {
-    stiffness: 150,
-    damping: 25,
-    mass: 1.2
-  })
+  const step = 360 / count
 
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [isHovering, setIsHovering] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const dragStartRotation = useRef(0)
 
-  // Auto-rotation
-  useEffect(() => {
-    if (isHovering || count <= 1) return
-    
-    const animation = animate(rotationValue, rotationValue.get() - 0.2, {
-      ease: "linear",
-      duration: 0.1,
-      repeat: Infinity,
-      onUpdate: (latest) => {
-        // Calculate active index based on rotation
-        const normalizedRotation = ((latest % 360) + 360) % 360
-        const anglePerItem = 360 / count
-        // The top of the circle is at 270 degrees in standard trig, but we'll align the active item to the top.
-        // Actually, we align index 0 to 90 degrees (bottom) or 270 degrees (top). Let's say active is at the bottom (90 deg).
-        // It's easier to just calculate which item is closest to the focal point.
-      }
-    })
-    
-    return () => animation.stop()
-  }, [isHovering, rotationValue, count])
+  /* ---------- animation refs (never cause re-renders) ---------- */
+  const rotRef = useRef(0)
+  const velRef = useRef(IDLE_SPEED)
+  const isDrag = useRef(false)
+  const isHover = useRef(false)
+  const lastT = useRef(0)
+  const lastDragX = useRef(0)
+  const lastDragT = useRef(0)
+  const dragVel = useRef(0)
+  const dragOriginX = useRef(0)
+  const dragMoved = useRef(false)
 
-  // Track active index based on spring rotation
+  /* ---------- React state (triggers render) ---------- */
+  const [rot, setRot] = useState(0)
+  const [hovered, setHovered] = useState<number | null>(null)
+
+  /* ────────────── requestAnimationFrame loop ─────────────── */
   useEffect(() => {
-    const unsubscribe = springRotation.on("change", (latest) => {
-      const anglePerItem = 360 / count
-      // We assume the focal point is at the bottom (angle 90 in our calculation).
-      // itemAngle = (index * anglePerItem) + latest
-      // We want to find the index where itemAngle % 360 is closest to 90.
-      
-      let closestIdx = 0
-      let minDiff = Infinity
-      
-      for (let i = 0; i < count; i++) {
-        const rawAngle = (i * anglePerItem) + latest
-        const normalized = ((rawAngle % 360) + 360) % 360
-        
-        // Focal point is top of circle (270 degrees).
-        const diff = Math.min(Math.abs(normalized - 270), 360 - Math.abs(normalized - 270))
-        
-        if (diff < minDiff) {
-          minDiff = diff
-          closestIdx = i
+    let id: number
+    const tick = (t: number) => {
+      if (lastT.current === 0) lastT.current = t
+      const dt = Math.min((t - lastT.current) / 1000, 0.05)
+      lastT.current = t
+
+      if (!isDrag.current) {
+        if (isHover.current) {
+          velRef.current *= FRICTION
+          if (Math.abs(velRef.current) < 0.3) velRef.current = 0
+        } else {
+          velRef.current += (IDLE_SPEED - velRef.current) * 0.025
         }
       }
-      
-      setActiveIndex(closestIdx)
-    })
-    
-    return () => unsubscribe()
-  }, [springRotation, count])
+
+      rotRef.current += velRef.current * dt
+      setRot(rotRef.current)
+      id = requestAnimationFrame(tick)
+    }
+    id = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(id)
+  }, [])
+
+  /* ────────────── mouse-wheel ─────────────── */
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      rotRef.current += e.deltaY * 0.12
+      velRef.current = e.deltaY * 0.6
+    }
+    el.addEventListener("wheel", onWheel, { passive: false })
+    return () => el.removeEventListener("wheel", onWheel)
+  }, [])
+
+  /* ────────────── pointer drag ─────────────── */
+  const onDown = useCallback((e: React.PointerEvent) => {
+    isDrag.current = true
+    dragMoved.current = false
+    dragOriginX.current = e.clientX
+    lastDragX.current = e.clientX
+    lastDragT.current = performance.now()
+    dragVel.current = 0
+    velRef.current = 0
+    ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+  }, [])
+
+  const onMove = useCallback((e: React.PointerEvent) => {
+    if (!isDrag.current) return
+    const now = performance.now()
+    const dx = e.clientX - lastDragX.current
+    if (Math.abs(e.clientX - dragOriginX.current) > 4) dragMoved.current = true
+    const dtSec = Math.max((now - lastDragT.current) / 1000, 0.001)
+    const degDelta = dx * DRAG_SENS
+    rotRef.current += degDelta
+    dragVel.current = degDelta / dtSec
+    lastDragX.current = e.clientX
+    lastDragT.current = now
+  }, [])
+
+  const onUp = useCallback(() => {
+    isDrag.current = false
+    velRef.current = dragVel.current * MOMENTUM
+  }, [])
+
+  /* ────────────── depth helper ─────────────── */
+  const depthOf = (i: number): number => {
+    const rad = ((i * step + rot) * Math.PI) / 180
+    return (Math.cos(rad) + 1) / 2 // 0 = back, 1 = front
+  }
 
   if (!items || items.length === 0) return null
 
-  const handleDragStart = () => {
-    setIsHovering(true)
-    dragStartRotation.current = rotationValue.get()
-  }
-
-  const handleDrag = (event: any, info: any) => {
-    // Convert horizontal drag to rotation
-    const dragAmount = info.offset.x * 0.5
-    rotationValue.set(dragStartRotation.current + dragAmount)
-  }
-
-  const handleDragEnd = (event: any, info: any) => {
-    setIsHovering(false)
-    // Add momentum
-    const velocity = info.velocity.x * 0.1
-    const newRotation = rotationValue.get() + velocity
-    
-    // Snap to nearest item
-    const anglePerItem = 360 / count
-    // Find the nearest rotation that aligns an item to 90 degrees
-    const currentRot = newRotation
-    
-    // This math snaps the wheel so the closest item is exactly at 270 deg (top)
-    const targetIdx = Math.round((270 - currentRot) / anglePerItem)
-    const snappedRotation = 270 - (targetIdx * anglePerItem)
-    
-    rotationValue.set(snappedRotation)
-  }
-
-  const handleCardClick = (index: number, journeyId: string) => {
-    if (activeIndex === index) {
-      // Navigate to details if it's already the active one
-      router.push(`/journey/${journeyId}`)
-    } else {
-      // Rotate the wheel to make this one active
-      const anglePerItem = 360 / count
-      const targetRotation = 270 - (index * anglePerItem)
-      
-      // Ensure we rotate the shortest distance
-      const current = rotationValue.get()
-      const diff = ((targetRotation - current) % 360 + 360) % 360
-      const shortestDiff = diff > 180 ? diff - 360 : diff
-      
-      rotationValue.set(current + shortestDiff)
-    }
-  }
-
   return (
-    <div 
-      className="relative w-full h-[700px] overflow-hidden flex items-center justify-center"
+    <div
       ref={containerRef}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+      className="relative w-full flex items-center justify-center select-none"
+      style={{
+        perspective: "2000px",
+        height: "620px",
+        cursor: isDrag.current ? "grabbing" : "grab",
+      }}
+      onPointerDown={onDown}
+      onPointerMove={onMove}
+      onPointerUp={onUp}
+      onPointerCancel={onUp}
+      onMouseEnter={() => { isHover.current = true }}
+      onMouseLeave={() => { isHover.current = false; setHovered(null) }}
     >
-      {/* Invisible drag surface */}
-      <motion.div
-        className="absolute inset-0 z-50 cursor-grab active:cursor-grabbing"
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0}
-        onDragStart={handleDragStart}
-        onDrag={handleDrag}
-        onDragEnd={handleDragEnd}
-      />
-
-      <div className="relative w-[1px] h-[1px]" style={{ transform: 'translateY(100px)' }}>
+      {/* ── 3-D stage (preserve-3d so browser handles z-sort) ── */}
+      <div
+        style={{
+          transformStyle: "preserve-3d",
+          position: "absolute",
+          width: 0,
+          height: 0,
+        }}
+      >
         {items.map((journey, i) => {
+          const totalAngle = i * step + rot + TILT_Y
+          const d = depthOf(i)
+          const isH = hovered === i
+
+          // ── depth-based styling ──
+          const s = isH ? 1.2 : 0.82 + d * 0.36     // 0.82 → 1.18
+          const op = isH ? 1 : 0.55 + d * 0.45       // 0.55 → 1.0
+          const bl = isH ? 0 : Math.max(0, (1 - d) * 3) // 0 → 3 px
+          const bright = 0.85 + d * 0.15              // 0.85 → 1.0
+          const lift = isH ? 30 : 0                   // hover lift
+
+          // ── shadow ──
+          const shOp = (0.04 + d * 0.14).toFixed(2)
+          const shBl = Math.round(6 + d * 20)
+          const shY = Math.round(3 + d * 10)
+
           return (
-            <CarouselItem 
+            <div
               key={journey.id}
-              index={i}
-              total={count}
-              radius={radius}
-              springRotation={springRotation}
-              isActive={activeIndex === i}
-              journey={journey}
-              onClick={() => handleCardClick(i, journey.id)}
-            />
+              style={{
+                position: "absolute",
+                transformStyle: "preserve-3d",
+                /*
+                 * 1. rotateX / rotateY  → tilt the ring + position the card
+                 * 2. translateZ          → push card out to orbit radius
+                 * 3. counter-rotate      → billboard the card toward the camera
+                 * 4. scale3d             → depth-based sizing
+                 */
+                transform: `
+                  rotateX(${TILT_X}deg)
+                  rotateY(${totalAngle}deg)
+                  translateZ(${ORBIT_RADIUS + lift}px)
+                  rotateY(${-totalAngle}deg)
+                  rotateX(${-TILT_X}deg)
+                  scale3d(${s}, ${s}, 1)
+                `,
+                filter: `blur(${bl}px) brightness(${bright})`,
+                opacity: op,
+                willChange: "transform, opacity, filter",
+                left: "-140px",
+                top: "-175px",
+                pointerEvents: "auto",
+              }}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={(e) => {
+                if (!dragMoved.current) {
+                  e.stopPropagation()
+                  router.push(`/journey/${journey.id}`)
+                }
+              }}
+            >
+              <div
+                style={{
+                  boxShadow: isH
+                    ? `0 ${shY + 4}px ${shBl + 12}px rgba(43,33,27,${
+                        parseFloat(shOp) + 0.08
+                      }), 0 0 20px rgba(183,123,93,0.15)`
+                    : `0 ${shY}px ${shBl}px rgba(43,33,27,${shOp})`,
+                  borderRadius: "24px",
+                  transition: "box-shadow 0.25s ease",
+                }}
+              >
+                <JourneyRadialCard
+                  journey={journey}
+                  isActive={d > 0.85}
+                  onClick={() => {}}
+                />
+              </div>
+            </div>
           )
         })}
       </div>
     </div>
-  )
-}
-
-function CarouselItem({ 
-  index, 
-  total, 
-  radius, 
-  springRotation, 
-  isActive, 
-  journey,
-  onClick
-}: any) {
-  const anglePerItem = 360 / total
-  const baseAngle = index * anglePerItem
-
-  // Calculate dynamic transform based on the spring rotation
-  const x = useTransform(springRotation, (rot: number) => {
-    const currentAngle = (baseAngle + rot) * (Math.PI / 180)
-    return Math.cos(currentAngle) * radius
-  })
-  
-  const y = useTransform(springRotation, (rot: number) => {
-    const currentAngle = (baseAngle + rot) * (Math.PI / 180)
-    return Math.sin(currentAngle) * (radius * 0.55) // Elliptical — flatter vertical radius
-  })
-
-  // Fade out items that are at the top of the circle (far away)
-  // Our focal point is 90 degrees (bottom). Top is 270 degrees.
-  const opacity = useTransform(springRotation, (rot: number) => {
-    const rawAngle = (baseAngle + rot)
-    const normalized = ((rawAngle % 360) + 360) % 360
-    const distanceFromFocal = Math.min(Math.abs(normalized - 270), 360 - Math.abs(normalized - 270))
-    
-    // At focal point (0 diff), opacity is 1. At opposite side (180 diff), opacity is 0.
-    return isActive ? 1 : Math.max(0.2, 1 - (distanceFromFocal / 120))
-  })
-
-  const scale = useTransform(springRotation, (rot: number) => {
-    const rawAngle = (baseAngle + rot)
-    const normalized = ((rawAngle % 360) + 360) % 360
-    const distanceFromFocal = Math.min(Math.abs(normalized - 270), 360 - Math.abs(normalized - 270))
-    
-    return isActive ? 1 : Math.max(0.7, 0.9 - (distanceFromFocal / 360))
-  })
-
-  // z-index based on distance from focal point
-  const zIndex = useTransform(springRotation, (rot: number) => {
-    const rawAngle = (baseAngle + rot)
-    const normalized = ((rawAngle % 360) + 360) % 360
-    const distanceFromFocal = Math.min(Math.abs(normalized - 270), 360 - Math.abs(normalized - 270))
-    return Math.round(50 - distanceFromFocal / 5)
-  })
-
-  return (
-    <motion.div
-      className="absolute top-0 left-0 -ml-[160px] -mt-[200px]"
-      style={{
-        x,
-        y,
-        opacity,
-        scale,
-        zIndex,
-      }}
-    >
-      <div className="relative pointer-events-auto">
-        <JourneyRadialCard 
-          journey={journey} 
-          isActive={isActive} 
-          onClick={onClick}
-        />
-      </div>
-    </motion.div>
   )
 }
