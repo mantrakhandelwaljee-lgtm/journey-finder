@@ -150,9 +150,9 @@ export function RadialCarousel({ items }: { items: any[] }) {
           const lift = isH ? 30 : 0                   // hover lift
 
           // ── shadow ──
-          const shOp = (0.04 + d * 0.14).toFixed(2)
-          const shBl = Math.round(6 + d * 20)
-          const shY = Math.round(3 + d * 10)
+          const shOp = (0.06 + d * 0.2).toFixed(2)
+          const shBl = Math.round(8 + d * 24)
+          const shY = Math.round(4 + d * 12)
 
           return (
             <div
@@ -177,8 +177,8 @@ export function RadialCarousel({ items }: { items: any[] }) {
                 filter: `blur(${bl}px) brightness(${bright})`,
                 opacity: op,
                 willChange: "transform, opacity, filter",
-                left: "-140px",
-                top: "-175px",
+                left: "-85px",
+                top: "-105px",
                 pointerEvents: "auto",
               }}
               onMouseEnter={() => setHovered(i)}
@@ -193,11 +193,11 @@ export function RadialCarousel({ items }: { items: any[] }) {
               <div
                 style={{
                   boxShadow: isH
-                    ? `0 ${shY + 4}px ${shBl + 12}px rgba(43,33,27,${
-                        parseFloat(shOp) + 0.08
-                      }), 0 0 20px rgba(183,123,93,0.15)`
-                    : `0 ${shY}px ${shBl}px rgba(43,33,27,${shOp})`,
-                  borderRadius: "24px",
+                    ? `0 ${shY + 6}px ${shBl + 16}px rgba(0,0,0,${
+                        parseFloat(shOp) + 0.12
+                      }), 0 0 24px rgba(183,123,93,0.2)`
+                    : `0 ${shY}px ${shBl}px rgba(0,0,0,${shOp})`,
+                  borderRadius: "12px",
                   transition: "box-shadow 0.25s ease",
                 }}
               >

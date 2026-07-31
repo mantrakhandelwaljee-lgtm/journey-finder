@@ -10,10 +10,10 @@ interface JourneyRadialCardProps {
 
 const getTransportIcon = (type: string) => {
   switch (type) {
-    case 'flight': return <Plane className="w-4 h-4" />
-    case 'train': return <Train className="w-4 h-4" />
-    case 'bus': return <Bus className="w-4 h-4" />
-    default: return <CarFront className="w-4 h-4" />
+    case 'flight': return <Plane className="w-3.5 h-3.5" />
+    case 'train': return <Train className="w-3.5 h-3.5" />
+    case 'bus': return <Bus className="w-3.5 h-3.5" />
+    default: return <CarFront className="w-3.5 h-3.5" />
   }
 }
 
@@ -24,88 +24,88 @@ export function JourneyRadialCard({ journey, isActive, onClick }: JourneyRadialC
   return (
     <div
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl p-5 flex flex-col gap-3 cursor-pointer transition-all duration-300 ${
+      className={`relative overflow-hidden rounded-xl p-3.5 flex flex-col gap-2 cursor-pointer transition-all duration-300 ${
         isActive 
-          ? 'bg-[#FFF8F0] border-2 border-[#D8C8B9]/60' 
-          : 'bg-[#FFF8F0]/85 border border-[#D8C8B9]/30'
+          ? 'bg-[#1E1714] border border-[#B77B5D]/40' 
+          : 'bg-[#2B211B]/95 border border-white/8'
       }`}
       style={{
-        width: 280,
-        height: 350,
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
+        width: 170,
+        height: 210,
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
       }}
     >
       {/* Header: user + transport */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-2.5">
-          <Avatar className="w-10 h-10 border-2 border-white/40">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Avatar className="w-7 h-7 border border-white/15">
             <AvatarImage src={user?.avatar_url || ""} />
-            <AvatarFallback className="bg-[#2B211B] text-[#FFF9F3] text-xs">{user?.name?.substring(0, 2).toUpperCase() || "U"}</AvatarFallback>
+            <AvatarFallback className="bg-[#B77B5D]/30 text-[#FFF9F3] text-[9px]">{user?.name?.substring(0, 2).toUpperCase() || "U"}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-semibold text-sm text-[#2B211B] leading-tight">{user?.name}</p>
-            <p className="text-xs text-[#7B6A5F] truncate max-w-[140px]">
+            <p className="font-medium text-[11px] text-[#FFF9F3] leading-tight truncate max-w-[80px]">{user?.name}</p>
+            <p className="text-[9px] text-[#A8978C] truncate max-w-[80px]">
               {user?.college}
             </p>
           </div>
         </div>
-        <div className="p-2.5 rounded-full bg-white/50 text-[#2B211B]">
+        <div className="p-1.5 rounded-full bg-white/8 text-[#D8C8B9]">
           {getTransportIcon(journey.transport_type)}
         </div>
       </div>
 
       {/* Route */}
-      <div className="flex-1 mt-2 relative">
-        <div className="absolute left-[9px] top-3 bottom-3 w-[2px] bg-gradient-to-b from-[#2B211B]/20 via-[#2B211B]/10 to-[#B77B5D]/40 rounded-full" />
+      <div className="flex-1 mt-1 relative">
+        <div className="absolute left-[7px] top-2.5 bottom-2.5 w-[1.5px] bg-gradient-to-b from-[#FFF9F3]/15 via-[#FFF9F3]/8 to-[#B77B5D]/30 rounded-full" />
         
-        <div className="space-y-6 relative">
-          <div className="flex gap-3 items-center">
-            <div className="w-5 h-5 rounded-full bg-white/60 flex items-center justify-center shadow-sm z-10">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#2B211B]" />
+        <div className="space-y-4 relative">
+          <div className="flex gap-2.5 items-center">
+            <div className="w-4 h-4 rounded-full bg-white/10 flex items-center justify-center z-10">
+              <div className="w-1 h-1 rounded-full bg-[#FFF9F3]" />
             </div>
             <div>
-              <p className="text-[10px] text-[#7B6A5F] uppercase tracking-wider font-semibold">Origin</p>
-              <p className="text-sm font-medium text-[#2B211B] truncate w-[190px]">{journey.origin_name}</p>
+              <p className="text-[8px] text-[#A8978C] uppercase tracking-wider font-semibold">From</p>
+              <p className="text-[11px] font-medium text-[#FFF9F3] truncate w-[120px]">{journey.origin_name}</p>
             </div>
           </div>
 
-          <div className="flex gap-3 items-center">
-            <div className="w-5 h-5 rounded-full bg-[#B77B5D]/20 flex items-center justify-center shadow-sm z-10">
-              <MapPin className="w-3 h-3 text-[#B77B5D]" />
+          <div className="flex gap-2.5 items-center">
+            <div className="w-4 h-4 rounded-full bg-[#B77B5D]/20 flex items-center justify-center z-10">
+              <MapPin className="w-2.5 h-2.5 text-[#B77B5D]" />
             </div>
             <div>
-              <p className="text-[10px] text-[#7B6A5F] uppercase tracking-wider font-semibold">Destination</p>
-              <p className="text-sm font-medium text-[#2B211B] truncate w-[190px]">{journey.destination_name}</p>
+              <p className="text-[8px] text-[#A8978C] uppercase tracking-wider font-semibold">To</p>
+              <p className="text-[11px] font-medium text-[#FFF9F3] truncate w-[120px]">{journey.destination_name}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="grid grid-cols-2 gap-3 mt-auto pt-3 border-t border-[#7B6A5F]/10">
-        <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-1 text-[#7B6A5F]">
-            <Calendar className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-medium uppercase tracking-wider">Date</span>
+      <div className="grid grid-cols-2 gap-2 mt-auto pt-2 border-t border-white/8">
+        <div className="flex flex-col">
+          <div className="flex items-center gap-1 text-[#A8978C]">
+            <Calendar className="w-3 h-3" />
+            <span className="text-[8px] font-medium uppercase tracking-wider">Date</span>
           </div>
-          <span className="text-xs font-semibold text-[#2B211B]">{format(departureTime, "MMM d, h:mm a")}</span>
+          <span className="text-[10px] font-semibold text-[#FFF9F3]">{format(departureTime, "MMM d, h:mm a")}</span>
         </div>
         
-        <div className="flex flex-col gap-0.5 items-end">
-          <div className="flex items-center gap-1 text-[#7B6A5F]">
-            <Users className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-medium uppercase tracking-wider">Seats</span>
+        <div className="flex flex-col items-end">
+          <div className="flex items-center gap-1 text-[#A8978C]">
+            <Users className="w-3 h-3" />
+            <span className="text-[8px] font-medium uppercase tracking-wider">Seats</span>
           </div>
-          <span className="text-xs font-semibold text-[#2B211B]">{journey.seats_available} left</span>
+          <span className="text-[10px] font-semibold text-[#FFF9F3]">{journey.seats_available} left</span>
         </div>
       </div>
       
-      {/* Active glow overlay */}
+      {/* Active glow */}
       {isActive && (
         <div 
-          className="absolute inset-0 border-2 border-[#B77B5D]/25 rounded-2xl pointer-events-none"
-          style={{ boxShadow: 'inset 0 0 30px rgba(183,123,93,0.08)' }}
+          className="absolute inset-0 rounded-xl pointer-events-none"
+          style={{ boxShadow: 'inset 0 0 20px rgba(183,123,93,0.12), 0 0 15px rgba(183,123,93,0.08)' }}
         />
       )}
     </div>
