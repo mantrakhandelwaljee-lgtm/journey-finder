@@ -62,9 +62,8 @@ export function RadialCarousel({ items, radius = 450 }: RadialCarouselProps) {
         const rawAngle = (i * anglePerItem) + latest
         const normalized = ((rawAngle % 360) + 360) % 360
         
-        // Focal point is bottom of circle (90 degrees). We can change this to top (270) if we want the wheel above.
-        // Let's use 90 degrees.
-        const diff = Math.min(Math.abs(normalized - 90), 360 - Math.abs(normalized - 90))
+        // Focal point is top of circle (270 degrees).
+        const diff = Math.min(Math.abs(normalized - 270), 360 - Math.abs(normalized - 270))
         
         if (diff < minDiff) {
           minDiff = diff
@@ -102,9 +101,9 @@ export function RadialCarousel({ items, radius = 450 }: RadialCarouselProps) {
     // Find the nearest rotation that aligns an item to 90 degrees
     const currentRot = newRotation
     
-    // This math snaps the wheel so the closest item is exactly at 90 deg
-    const targetIdx = Math.round((90 - currentRot) / anglePerItem)
-    const snappedRotation = 90 - (targetIdx * anglePerItem)
+    // This math snaps the wheel so the closest item is exactly at 270 deg (top)
+    const targetIdx = Math.round((270 - currentRot) / anglePerItem)
+    const snappedRotation = 270 - (targetIdx * anglePerItem)
     
     rotationValue.set(snappedRotation)
   }
@@ -116,7 +115,7 @@ export function RadialCarousel({ items, radius = 450 }: RadialCarouselProps) {
     } else {
       // Rotate the wheel to make this one active
       const anglePerItem = 360 / count
-      const targetRotation = 90 - (index * anglePerItem)
+      const targetRotation = 270 - (index * anglePerItem)
       
       // Ensure we rotate the shortest distance
       const current = rotationValue.get()
@@ -129,7 +128,7 @@ export function RadialCarousel({ items, radius = 450 }: RadialCarouselProps) {
 
   return (
     <div 
-      className="relative w-full h-[600px] overflow-hidden flex items-center justify-center -mt-10"
+      className="relative w-full h-[700px] overflow-hidden flex items-center justify-center"
       ref={containerRef}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
@@ -145,7 +144,7 @@ export function RadialCarousel({ items, radius = 450 }: RadialCarouselProps) {
         onDragEnd={handleDragEnd}
       />
 
-      <div className="relative w-[1px] h-[1px]" style={{ transform: 'translateY(-200px)' }}>
+      <div className="relative w-[1px] h-[1px]" style={{ transform: 'translateY(100px)' }}>
         {items.map((journey, i) => {
           return (
             <CarouselItem 
@@ -185,7 +184,7 @@ function CarouselItem({
   
   const y = useTransform(springRotation, (rot: number) => {
     const currentAngle = (baseAngle + rot) * (Math.PI / 180)
-    return Math.sin(currentAngle) * radius
+    return Math.sin(currentAngle) * (radius * 0.55) // Elliptical — flatter vertical radius
   })
 
   // Fade out items that are at the top of the circle (far away)
@@ -193,7 +192,7 @@ function CarouselItem({
   const opacity = useTransform(springRotation, (rot: number) => {
     const rawAngle = (baseAngle + rot)
     const normalized = ((rawAngle % 360) + 360) % 360
-    const distanceFromFocal = Math.min(Math.abs(normalized - 90), 360 - Math.abs(normalized - 90))
+    const distanceFromFocal = Math.min(Math.abs(normalized - 270), 360 - Math.abs(normalized - 270))
     
     // At focal point (0 diff), opacity is 1. At opposite side (180 diff), opacity is 0.
     return isActive ? 1 : Math.max(0.2, 1 - (distanceFromFocal / 120))
@@ -202,12 +201,18 @@ function CarouselItem({
   const scale = useTransform(springRotation, (rot: number) => {
     const rawAngle = (baseAngle + rot)
     const normalized = ((rawAngle % 360) + 360) % 360
-    const distanceFromFocal = Math.min(Math.abs(normalized - 90), 360 - Math.abs(normalized - 90))
+    const distanceFromFocal = Math.min(Math.abs(normalized - 270), 360 - Math.abs(normalized - 270))
     
     return isActive ? 1 : Math.max(0.7, 0.9 - (distanceFromFocal / 360))
   })
 
-  const zIndex = isActive ? 40 : 10
+  // z-index based on distance from focal point
+  const zIndex = useTransform(springRotation, (rot: number) => {
+    const rawAngle = (baseAngle + rot)
+    const normalized = ((rawAngle % 360) + 360) % 360
+    const distanceFromFocal = Math.min(Math.abs(normalized - 270), 360 - Math.abs(normalized - 270))
+    return Math.round(50 - distanceFromFocal / 5)
+  })
 
   return (
     <motion.div

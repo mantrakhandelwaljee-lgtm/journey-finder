@@ -25,8 +25,10 @@ export function JourneyRadialCard({ journey, isActive, onClick }: JourneyRadialC
   return (
     <motion.div
       onClick={onClick}
-      className={`relative overflow-hidden rounded-3xl border border-white/20 p-6 flex flex-col gap-4 cursor-pointer transition-colors duration-300 ${
-        isActive ? 'bg-[#FFF8F0]/80 shadow-[0_20px_40px_-10px_rgba(43,33,27,0.15)]' : 'bg-[#FFF8F0]/40'
+      className={`relative overflow-hidden rounded-3xl p-6 flex flex-col gap-4 cursor-pointer transition-all duration-300 ${
+        isActive 
+          ? 'bg-[#FFF8F0] shadow-[0_20px_40px_-10px_rgba(43,33,27,0.18)] border-2 border-[#D8C8B9]/60' 
+          : 'bg-[#FFF8F0]/70 border border-[#D8C8B9]/30 shadow-[0_4px_16px_-4px_rgba(43,33,27,0.08)]'
       }`}
       style={{
         width: 320,
