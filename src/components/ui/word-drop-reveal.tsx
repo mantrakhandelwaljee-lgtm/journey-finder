@@ -80,10 +80,10 @@ export function WordDropReveal({ words, className = "", startDelay = 0, onAllLan
               } : undefined}
               transition={{
                 type: "spring",
-                stiffness: 250, // Fast initial fall
-                damping: 12,    // Low damping for multiple rebounds
-                mass: 1.5,      // Higher mass makes rebounds last longer
-                delay: index * 0.18, // Reset stagger to original
+                stiffness: 100, // Slower fall closer to original speed
+                damping: 12,    // Keep low damping for multiple rebounds
+                mass: 1.5,
+                delay: index * 0.18,
               }}
               onAnimationComplete={() => {
                 if (animateCards) handleCardLanded()
