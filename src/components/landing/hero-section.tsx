@@ -78,7 +78,7 @@ export function HeroSection({ children }: HeroSectionProps) {
             <WordDropReveal
               words={["Connect", "Travel", "Seamless", "Together", "Ride"]}
               className="w-full max-w-3xl mx-auto mt-4"
-              startDelay={2.5}
+              startDelay={1.5}
               onAllLanded={() => setCardsLanded(true)}
             />
           </div>
