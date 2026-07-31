@@ -147,17 +147,21 @@ export function RadialCarousel({ items }: { items: any[] }) {
           const isH = hovered === i
           const isActive = d > 0.9
 
+          // ── smooth pop curve: d³ peaks sharply at front, tapers smoothly ──
+          const pop = d * d * d                          // 0 → 1 (cubic ease)
+
           // ── depth-based styling ──
-          const s = isH ? 1.12 : 0.8 + d * 0.28        // 0.80 → 1.08
+          const s = isH ? 1.18 : 0.78 + pop * 0.42      // 0.78 → 1.20 (front pops bigger)
           const op = 0.35 + d * 0.65                     // 0.35 → 1.0
           const bl = isH ? 0 : Math.max(0, (1 - d) * 3) // 0 → 3px
           const bright = 0.75 + d * 0.25                 // 0.75 → 1.0
+          const popY = -(pop * 40)                       // front rises up to -40px
           const lift = isH ? 35 : 0
 
-          // ── shadow (stronger at front) ──
-          const shOp = (0.06 + d * 0.22).toFixed(2)
-          const shBl = Math.round(8 + d * 28)
-          const shY = Math.round(4 + d * 14)
+          // ── shadow (stronger + wider at front) ──
+          const shOp = (0.06 + pop * 0.26).toFixed(2)
+          const shBl = Math.round(8 + pop * 32)
+          const shY = Math.round(4 + pop * 16)
 
           return (
             <div
@@ -167,14 +171,13 @@ export function RadialCarousel({ items }: { items: any[] }) {
                 transformStyle: "preserve-3d",
                 /*
                  * 1. translateX + translateZ → position on the elliptical orbit
-                 * 2. rotateY(-totalAngle)    → card rotates WITH the orbit
-                 *    • front (0°):   faces camera
-                 *    • sides (±90°): shows edge
-                 *    • back (180°):  faces away
-                 * 3. scale3d → depth-based sizing
+                 * 2. translateY(popY)        → front card rises smoothly
+                 * 3. rotateY(-totalAngle)    → card rotates WITH the orbit
+                 * 4. scale3d                 → front card scales up
                  */
                 transform: `
                   translateX(${x}px)
+                  translateY(${popY}px)
                   translateZ(${z + lift}px)
                   rotateY(${-totalAngle}deg)
                   scale3d(${s}, ${s}, 1)
