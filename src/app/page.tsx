@@ -33,7 +33,7 @@ export default async function LandingPage() {
               <div className="space-y-4 max-w-3xl">
                 <WordDropReveal 
                   words={["Connect", "Travel", "Seamless", "Together", "Ride"]}
-                  className="py-4 w-full max-w-4xl mx-auto"
+                  className="py-4 w-full max-w-4xl mx-auto min-h-[160px] sm:min-h-[180px]"
                   startDelay={2.5}
                 >
                   <HeroMagnifier>

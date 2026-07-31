@@ -1,69 +1,131 @@
 "use client"
 
-import React, { useRef } from "react"
-import { motion, useInView } from "framer-motion"
+import React, { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface WordDropRevealProps {
-  children: React.ReactNode // The final headline text
-  words: string[] // The words on the cards
+  children: React.ReactNode
+  words: string[]
   className?: string
   startDelay?: number
 }
 
-export function WordDropReveal({ children, words, className = "", startDelay = 0 }: WordDropRevealProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  // Trigger when 60-70% is in view, but since it's a hero it might already be in view. 
-  // Margin -20% means it needs to be 20% into the viewport to trigger.
-  const isInView = useInView(containerRef, { once: true, margin: "-20% 0px" })
+// Anchor-style card colors — warm palette variants
+const cardStyles = [
+  { bg: "#2B3A2E", text: "#FFFDF9", width: "180px" },   // Deep forest green
+  { bg: "#FFFDF9", text: "#2B211B", width: "170px", border: "#D4C4B5" },  // Cream outlined
+  { bg: "#E8C9AD", text: "#5A3E2B", width: "160px" },   // Warm peach
+  { bg: "#B77B5D", text: "#FFFDF9", width: "155px" },   // Terracotta
+  { bg: "#2B211B", text: "#FFFDF9", width: "200px" },   // Deep espresso
+]
 
-  // Premium gravity-inspired cubic bezier ease-out
-  const dropEase = [0.22, 0.61, 0.36, 1] as const
+// Organic scattered positions (percentage-based, like Anchor's layout)
+// Each card has: x offset from center, y offset, rotation
+const cardPositions = [
+  { x: -120, y: -30, rotate: -6 },    // Top-left, tilted
+  { x: 100,  y: -20, rotate: 4 },     // Top-right
+  { x: -30,  y: 10,  rotate: -2 },    // Center-left
+  { x: -140, y: 50,  rotate: 3 },     // Bottom-left
+  { x: 80,   y: 45,  rotate: -3 },    // Bottom-right
+]
+
+export function WordDropReveal({ children, words, className = "", startDelay = 0 }: WordDropRevealProps) {
+  const [started, setStarted] = useState(false)
+  const [droppedCount, setDroppedCount] = useState(0)
+
+  const totalCards = words.length
+  const allDropped = droppedCount >= totalCards
+
+  // Start the drop sequence after startDelay
+  useEffect(() => {
+    const timer = setTimeout(() => setStarted(true), startDelay * 1000)
+    return () => clearTimeout(timer)
+  }, [startDelay])
+
+  // Drop cards one by one
+  useEffect(() => {
+    if (!started || droppedCount >= totalCards) return
+    const timer = setTimeout(() => {
+      setDroppedCount(prev => prev + 1)
+    }, 320)
+    return () => clearTimeout(timer)
+  }, [started, droppedCount, totalCards])
 
   return (
-    <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
-      
-      {/* Underlying Headline Layer */}
+    <div className={`relative ${className}`}>
+
+      {/* Headline — hidden initially, revealed after all cards drop */}
       <motion.div
-        initial={{ opacity: 0.8, y: 10, filter: "blur(6px)" }}
-        animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0.8, y: 10, filter: "blur(6px)" }}
-        transition={{ duration: 0.8, delay: startDelay + 0.1, ease: dropEase }}
-        className="relative z-0 flex items-center justify-center w-full min-h-[120px] sm:min-h-[160px] md:min-h-[200px]"
+        initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
+        animate={allDropped
+          ? { opacity: 1, y: 0, filter: "blur(0px)" }
+          : { opacity: 0, y: 24, filter: "blur(10px)" }
+        }
+        transition={{ duration: 1, ease: [0.22, 0.61, 0.36, 1] as const }}
+        className="w-full"
       >
         {children}
       </motion.div>
 
-      {/* Covering Word Cards Layer */}
-      <div className="absolute inset-0 z-10 flex flex-wrap justify-center items-center gap-3 sm:gap-4 p-2 sm:p-4 pointer-events-none">
-        {words.map((word, index) => {
-          // Alternate slight rotation direction for organic feel
-          const rotateDest = index % 2 === 0 ? 3 + (index * 0.5) : -3 - (index * 0.5)
-          
-          return (
-            <motion.div
-              key={index}
-              initial={{ y: 0, rotate: 0, opacity: 1, scale: 1 }}
-              animate={isInView ? { 
-                y: 200, 
-                rotate: rotateDest, 
-                opacity: 0, 
-                scale: 0.96 
-              } : { 
-                y: 0, 
-                rotate: 0, 
-                opacity: 1, 
-                scale: 1 
-              }}
-              transition={{
-                duration: 0.9,
-                delay: startDelay + (index * 0.2), // stagger + start delay
-                ease: dropEase
-              }}
-              className="pointer-events-auto bg-[#FFFDF9] border border-[#E7D8CB] shadow-[0_8px_30px_rgba(43,33,27,0.08)] rounded-xl sm:rounded-2xl px-6 py-3 sm:px-8 sm:py-4 text-[#2B211B] font-sans font-medium text-lg sm:text-2xl md:text-3xl"
-            >
-              {word}
-            </motion.div>
-          )
-        })}
+      {/* Scattered card layout overlay */}
+      <div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        style={{ perspective: "800px" }}
+      >
+        <AnimatePresence mode="popLayout">
+          {words.map((word, index) => {
+            if (index < droppedCount) return null
+
+            const style = cardStyles[index % cardStyles.length]
+            const pos = cardPositions[index % cardPositions.length]
+            const stackOrder = totalCards - index
+
+            return (
+              <motion.div
+                key={word}
+                layout
+                initial={{
+                  x: pos.x,
+                  y: pos.y,
+                  rotate: pos.rotate,
+                  opacity: 1,
+                  scale: 1,
+                }}
+                animate={{
+                  x: pos.x,
+                  y: pos.y,
+                  rotate: pos.rotate,
+                  opacity: 1,
+                  scale: 1,
+                }}
+                exit={{
+                  y: pos.y + 500,
+                  x: pos.x + (index % 2 === 0 ? -40 : 40),
+                  rotate: pos.rotate + (index % 2 === 0 ? -12 : 12),
+                  opacity: 0,
+                  scale: 0.85,
+                  transition: {
+                    duration: 0.75,
+                    ease: [0.55, 0.085, 0.68, 0.53] as const,
+                  }
+                }}
+                className="absolute rounded-xl sm:rounded-2xl px-5 py-2.5 sm:px-7 sm:py-3.5 pointer-events-auto"
+                style={{
+                  zIndex: stackOrder,
+                  backgroundColor: style.bg,
+                  color: style.text,
+                  minWidth: style.width,
+                  border: style.border ? `1.5px solid ${style.border}` : "none",
+                  boxShadow: "0 10px 40px rgba(43,33,27,0.15), 0 2px 8px rgba(43,33,27,0.08)",
+                }}
+              >
+                <span className="font-heading font-semibold text-base sm:text-lg md:text-xl tracking-tight select-none whitespace-nowrap">
+                  {word}
+                </span>
+              </motion.div>
+            )
+          })}
+        </AnimatePresence>
       </div>
     </div>
   )
