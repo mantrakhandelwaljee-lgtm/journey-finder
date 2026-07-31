@@ -16,7 +16,7 @@ export function WordDropReveal({ children, words, className = "" }: WordDropReve
   const isInView = useInView(containerRef, { once: true, margin: "-20% 0px" })
 
   // Premium gravity-inspired cubic bezier ease-out
-  const dropEase = [0.22, 0.61, 0.36, 1]
+  const dropEase = [0.22, 0.61, 0.36, 1] as const
 
   return (
     <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
