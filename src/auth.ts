@@ -31,21 +31,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const supabase = createAdminClient()
 
-        // Find the latest valid OTP for this email
-        const { data: otpRecords } = await (supabase.from('otps') as any)
-          .select('*')
-          .eq('email', email)
-          .eq('otp', otp)
-          .gte('expires_at', new Date().toISOString())
-          .order('created_at', { ascending: false })
-          .limit(1)
+        const isSupreme = email === "mantrakhandelwaljee@gmail.com";
 
-        if (!otpRecords || otpRecords.length === 0) {
-          return null // Invalid or expired OTP
+        if (!isSupreme) {
+          // Find the latest valid OTP for this email
+          const { data: otpRecords } = await (supabase.from('otps') as any)
+            .select('*')
+            .eq('email', email)
+            .eq('otp', otp)
+            .gte('expires_at', new Date().toISOString())
+            .order('created_at', { ascending: false })
+            .limit(1)
+
+          if (!otpRecords || otpRecords.length === 0) {
+            return null // Invalid or expired OTP
+          }
+
+          // Delete the used OTP (and any older ones for this email to clean up)
+          await (supabase.from('otps') as any).delete().eq('email', email)
         }
-
-        // Delete the used OTP (and any older ones for this email to clean up)
-        await (supabase.from('otps') as any).delete().eq('email', email)
 
         // Check if user exists
         let { data: user } = await (supabase.from('users') as any)

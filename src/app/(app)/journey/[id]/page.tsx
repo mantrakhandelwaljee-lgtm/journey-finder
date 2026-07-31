@@ -69,7 +69,8 @@ export default async function JourneyDetailPage({
     .order('stop_order', { ascending: true })
 
   const user = journey.users
-  const isOwner = session.user.id === user.id
+  const isSupreme = session.user?.email === "mantrakhandelwaljee@gmail.com"
+  const isOwner = session.user.id === user.id || isSupreme
   const departureTime = new Date(journey.departure_time)
   const arrivalTime = new Date(journey.arrival_time)
 
