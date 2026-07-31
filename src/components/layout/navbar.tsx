@@ -3,6 +3,7 @@ import { auth } from "@/auth"
 import { UserButton } from "@/components/auth/user-button"
 import { MapPin, PlusCircle, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { NavLinks } from "./nav-links"
 
 export async function Navbar() {
   const session = await auth()
@@ -15,30 +16,11 @@ export async function Navbar() {
             <div className="bg-primary p-1 rounded-md">
               <MapPin className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="font-extrabold text-xl tracking-tight inline-block">JourneyFinder</span>
+            <span className="font-heading font-semibold text-[24px] md:text-[28px] text-[#2B211B] tracking-tight inline-block">JourneyFinder</span>
           </Link>
           
           {session?.user?.isOnboarded && (
-            <nav className="hidden md:flex gap-6">
-              <Link
-                href="/dashboard"
-                className="flex items-center text-xs font-bold tracking-wider uppercase text-foreground/80 hover:text-foreground transition-colors"
-              >
-                Dashboard
-              </Link>
-              <Link
-                href="/search"
-                className="flex items-center text-xs font-bold tracking-wider uppercase text-foreground/80 hover:text-foreground transition-colors"
-              >
-                Find Journeys
-              </Link>
-              <Link
-                href="/profile"
-                className="flex items-center text-xs font-bold tracking-wider uppercase text-foreground/80 hover:text-foreground transition-colors"
-              >
-                Profile
-              </Link>
-            </nav>
+            <NavLinks />
           )}
         </div>
 

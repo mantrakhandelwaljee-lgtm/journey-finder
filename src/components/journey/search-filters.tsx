@@ -71,13 +71,13 @@ export function SearchFilters() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-card border rounded-lg p-5 shadow-sm mb-8 space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="premium-search-container p-6 mb-12 space-y-4 relative z-10">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
         <div className="md:col-span-1">
           <LocationPicker
             label="Going to"
             value={destName || ""}
-            placeholder="Search destination..."
+            placeholder="Where are you going?"
             onLocationSelect={(loc) => {
               setValue("destination", { name: loc.name, lat: loc.lat, lng: loc.lng })
             }}
@@ -86,23 +86,26 @@ export function SearchFilters() {
             }}
           />
         </div>
-        <div className="space-y-2">
-          <Label>Date</Label>
-          <Input 
-            type="date" 
-            onChange={(e) => {
-              if (e.target.value) {
-                setValue("target_date", new Date(e.target.value))
-              } else {
-                setValue("target_date", undefined)
-              }
-            }}
-            defaultValue={searchParams.get("date") || ""}
-          />
+        <div className="space-y-2 group">
+          <Label className="premium-search-label">Date</Label>
+          <div className="relative">
+            <Input 
+              type="date" 
+              className="premium-search-input"
+              onChange={(e) => {
+                if (e.target.value) {
+                  setValue("target_date", new Date(e.target.value))
+                } else {
+                  setValue("target_date", undefined)
+                }
+              }}
+              defaultValue={searchParams.get("date") || ""}
+            />
+          </div>
         </div>
-        <div className="space-y-2">
-          <Label>Transport</Label>
-          <div>
+        <div className="space-y-2 group">
+          <Label className="premium-search-label">Transport</Label>
+          <div className="relative">
             <Select
               value={transportType}
               onValueChange={(val) => {
@@ -114,7 +117,7 @@ export function SearchFilters() {
                 }
               }}
             >
-              <SelectTrigger className="w-full h-10 capitalize">
+              <SelectTrigger className="w-full capitalize premium-search-input">
                 <SelectValue placeholder="Any mode" />
               </SelectTrigger>
               <SelectContent>
@@ -128,16 +131,17 @@ export function SearchFilters() {
             </Select>
           </div>
         </div>
-        <Button type="submit" disabled={isSearching} className="w-full h-10">
+        <Button type="submit" disabled={isSearching} className="w-full premium-search-btn">
           <Search className="w-4 h-4 mr-2" />
           Search
         </Button>
       </div>
 
       {needsTransportNumber && (
-        <div className="max-w-sm">
-          <Label>{transportType === "train" ? "Train Number" : "Flight Number"}</Label>
+        <div className="max-w-sm space-y-2 group">
+          <Label className="premium-search-label">{transportType === "train" ? "Train Number" : "Flight Number"}</Label>
           <Input 
+            className="premium-search-input"
             placeholder={transportType === "train" ? "e.g. 12301" : "e.g. AI-302"}
             {...register("transport_number")} 
           />

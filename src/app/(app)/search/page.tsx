@@ -36,8 +36,8 @@ export default async function SearchPage(
   return (
     <div className="container max-w-6xl mx-auto py-10 px-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Find a Journey</h1>
-        <p className="text-muted-foreground mt-2">
+        <h1 className="font-heading text-[#2B211B] font-semibold text-[38px] md:text-[44px] tracking-tight">Find a Journey</h1>
+        <p className="text-muted-foreground mt-2 font-sans">
           Search for travel companions heading to your destination.
         </p>
       </div>
@@ -46,8 +46,8 @@ export default async function SearchPage(
         <SearchFilters />
       </Suspense>
 
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-6">Available Journeys</h2>
+      <div className="mt-12">
+        <h2 className="font-heading text-[#2B211B] font-semibold text-[26px] md:text-[30px] mb-6">Available Journeys</h2>
         <JourneyList journeys={result.data || []} />
       </div>
     </div>

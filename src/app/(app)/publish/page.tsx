@@ -16,17 +16,17 @@ export default async function PublishPage() {
 
   return (
     <div className="container max-w-2xl mx-auto py-10 px-4">
-      <Card className="shadow-lg">
+      <div className="premium-search-container shadow-lg p-2 md:p-6">
         <CardHeader>
-          <CardTitle className="text-3xl">Publish a Journey</CardTitle>
-          <CardDescription>
+          <CardTitle className="font-heading font-semibold text-[38px] text-[#2B211B]">Publish a Journey</CardTitle>
+          <CardDescription className="text-[#51443B] font-sans">
             Share your travel plans to find companions heading the same way.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <PublishForm />
         </CardContent>
-      </Card>
+      </div>
     </div>
   )
 }

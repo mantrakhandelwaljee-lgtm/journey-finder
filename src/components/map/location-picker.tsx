@@ -138,15 +138,15 @@ export function LocationPicker({
   }
 
   return (
-    <div className="space-y-2" ref={containerRef}>
-      <Label>{label}</Label>
+    <div className="space-y-2 group" ref={containerRef}>
+      <Label className="premium-search-label">{label}</Label>
       <div className="relative">
-        <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+        <MapPin className="absolute left-3 top-3.5 h-4 w-4 premium-search-icon z-10" />
         {isLoading && (
-          <Loader2 className="absolute right-3 top-3 h-4 w-4 text-muted-foreground animate-spin z-10" />
+          <Loader2 className="absolute right-3 top-3.5 h-4 w-4 text-muted-foreground animate-spin z-10" />
         )}
         <Input
-          className="pl-9"
+          className="pl-9 premium-search-input"
           placeholder={placeholder}
           value={query}
           onChange={handleInputChange}

@@ -41,20 +41,20 @@ export default async function DashboardPage() {
     <div className="container max-w-6xl mx-auto py-10 px-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Welcome, {session.user.name?.split(' ')[0]}</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="font-heading font-semibold text-[38px] md:text-[44px] text-[#2B211B] tracking-tight leading-tight">Welcome, {session.user.name?.split(' ')[0]}</h1>
+          <p className="text-[#51443B] font-sans mt-1">
             Manage your journeys and find travel companions.
           </p>
         </div>
         <div className="flex gap-3">
           <Link href="/search">
-            <Button variant="outline">
+            <Button variant="outline" className="premium-search-input h-10 border-[#E7D8CB] text-[#51443B] hover:bg-[#FFF9F3]">
               <Search className="mr-2 h-4 w-4" />
               Find a Journey
             </Button>
           </Link>
           <Link href="/publish">
-            <Button>
+            <Button className="premium-search-btn h-10 px-4">
               <PlusCircle className="mr-2 h-4 w-4" />
               Publish Journey
             </Button>
@@ -65,8 +65,8 @@ export default async function DashboardPage() {
       <div className="space-y-8 mt-12">
         <section className="text-center relative">
           <div className="mb-4">
-            <h2 className="text-3xl font-bold text-[#2B211B] mb-2">Available Journeys</h2>
-            <p className="text-[#7B6A5F] max-w-lg mx-auto">
+            <h2 className="font-heading font-semibold text-[26px] md:text-[30px] text-[#2B211B] mb-2">Available Journeys</h2>
+            <p className="text-[#7B6A5F] font-sans max-w-lg mx-auto">
               Spin the wheel to discover rides matching your route. Drag horizontally or click a card to bring it to focus.
             </p>
           </div>
