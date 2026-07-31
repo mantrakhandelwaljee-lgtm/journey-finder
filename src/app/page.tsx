@@ -34,6 +34,7 @@ export default async function LandingPage() {
                 <WordDropReveal 
                   words={["Connect", "Travel", "Seamless", "Together", "Ride"]}
                   className="py-4 w-full max-w-4xl mx-auto"
+                  startDelay={2.5}
                 >
                   <HeroMagnifier>
                     <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl font-heading text-[#2B211B] leading-tight">

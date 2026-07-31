@@ -81,9 +81,7 @@ export function HeroMagnifier({
             top: springY,
             x: "-50%", // Center the bubble on the cursor
             y: "-50%",
-            background: "rgba(255,255,255,0.15)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
+            background: "#fff4ed",
             border: "1px solid rgba(255,255,255,0.4)",
             boxShadow: "0 15px 35px rgba(0,0,0,0.1), inset 0 0 40px rgba(255,255,255,0.5), inset 0 4px 10px rgba(255,255,255,0.8)",
             opacity: isHovering ? 1 : 0,

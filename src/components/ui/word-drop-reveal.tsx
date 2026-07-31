@@ -7,9 +7,10 @@ interface WordDropRevealProps {
   children: React.ReactNode // The final headline text
   words: string[] // The words on the cards
   className?: string
+  startDelay?: number
 }
 
-export function WordDropReveal({ children, words, className = "" }: WordDropRevealProps) {
+export function WordDropReveal({ children, words, className = "", startDelay = 0 }: WordDropRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   // Trigger when 60-70% is in view, but since it's a hero it might already be in view. 
   // Margin -20% means it needs to be 20% into the viewport to trigger.
@@ -25,7 +26,7 @@ export function WordDropReveal({ children, words, className = "" }: WordDropReve
       <motion.div
         initial={{ opacity: 0.8, y: 10, filter: "blur(6px)" }}
         animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0.8, y: 10, filter: "blur(6px)" }}
-        transition={{ duration: 0.8, delay: 0.1, ease: dropEase }}
+        transition={{ duration: 0.8, delay: startDelay + 0.1, ease: dropEase }}
         className="relative z-0 flex items-center justify-center w-full min-h-[120px] sm:min-h-[160px] md:min-h-[200px]"
       >
         {children}
@@ -54,7 +55,7 @@ export function WordDropReveal({ children, words, className = "" }: WordDropReve
               }}
               transition={{
                 duration: 0.9,
-                delay: index * 0.2, // 200ms stagger between cards
+                delay: startDelay + (index * 0.2), // stagger + start delay
                 ease: dropEase
               }}
               className="pointer-events-auto bg-[#FFFDF9] border border-[#E7D8CB] shadow-[0_8px_30px_rgba(43,33,27,0.08)] rounded-xl sm:rounded-2xl px-6 py-3 sm:px-8 sm:py-4 text-[#2B211B] font-sans font-medium text-lg sm:text-2xl md:text-3xl"
