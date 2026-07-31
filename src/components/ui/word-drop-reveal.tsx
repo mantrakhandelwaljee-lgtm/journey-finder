@@ -22,11 +22,11 @@ const cardStyles = [
 // Final resting positions — scattered organic layout at the bottom
 // x: offset from center, y: final y position, rotate: final rotation, width
 const finalPositions = [
-  { x: -140, y: 0, rotate: -5, width: "180px" },    // Left
-  { x: 90,   y: -10, rotate: 3, width: "170px" },   // Right-ish
-  { x: -20,  y: 20, rotate: -1.5, width: "160px" }, // Center
-  { x: -160, y: 45, rotate: 4, width: "165px" },    // Bottom-left
-  { x: 70,   y: 40, rotate: -2.5, width: "210px" }, // Bottom-right
+  { x: -230, y: -20, rotate: -4, width: "380px" },    // Top-left
+  { x: 190,  y: -10, rotate: 2,  width: "360px" },    // Top-right
+  { x: -30,  y: 50,  rotate: -2, width: "340px" },    // Middle
+  { x: -210, y: 120, rotate: 1,  width: "350px" },    // Bottom-left
+  { x: 200,  y: 125, rotate: -1, width: "420px" },    // Bottom-right
 ]
 
 export function WordDropReveal({ words, className = "", startDelay = 0, onAllLanded }: WordDropRevealProps) {
@@ -56,7 +56,7 @@ export function WordDropReveal({ words, className = "", startDelay = 0, onAllLan
   return (
     <div className={`relative ${className}`}>
       {/* Cards container */}
-      <div className="relative w-full flex items-center justify-center" style={{ height: "120px" }}>
+      <div className="relative w-full flex items-center justify-center" style={{ height: "220px" }}>
         {words.map((word, index) => {
           const style = cardStyles[index % cardStyles.length]
           const pos = finalPositions[index % finalPositions.length]
@@ -86,7 +86,7 @@ export function WordDropReveal({ words, className = "", startDelay = 0, onAllLan
               onAnimationComplete={() => {
                 if (animateCards) handleCardLanded()
               }}
-              className="absolute rounded-xl sm:rounded-2xl px-5 py-2.5 sm:px-7 sm:py-3.5"
+              className="absolute flex items-center justify-start rounded-xl sm:rounded-2xl px-6 py-4 sm:px-8 sm:py-5"
               style={{
                 zIndex: totalCards - index,
                 backgroundColor: style.bg,
