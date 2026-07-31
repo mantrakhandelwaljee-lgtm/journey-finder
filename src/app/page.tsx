@@ -2,6 +2,7 @@ import { auth } from "@/auth"
 import { MapPin, Users, ShieldCheck } from "lucide-react"
 import { redirect } from "next/navigation"
 import { SplashScreen } from "@/components/ui/splash-screen"
+import { Navbar } from "@/components/layout/navbar"
 import { HeroSection } from "@/components/landing/hero-section"
 
 export default async function LandingPage() {
@@ -19,8 +20,10 @@ export default async function LandingPage() {
     <div className="flex min-h-screen flex-col bg-background">
       <SplashScreen />
       <main className="flex-1">
-        {/* Hero with card drop animation + navbar */}
-        <HeroSection />
+        {/* Hero with card drop animation — Navbar passed as children so it stays server-rendered */}
+        <HeroSection>
+          <Navbar />
+        </HeroSection>
 
         {/* Features Section */}
         <section className="w-full py-20 bg-muted/30">

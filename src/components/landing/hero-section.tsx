@@ -7,20 +7,25 @@ import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { HeroMagnifier } from "@/components/ui/hero-magnifier"
 import { WordDropReveal } from "@/components/ui/word-drop-reveal"
-import { Navbar } from "@/components/layout/navbar"
 
-export function HeroSection() {
+const revealEase = [0.22, 0.61, 0.36, 1] as const
+
+interface HeroSectionProps {
+  children: React.ReactNode
+}
+
+export function HeroSection({ children }: HeroSectionProps) {
   const [cardsLanded, setCardsLanded] = useState(false)
 
   return (
     <>
       {/* Navbar — fades in after cards land */}
       <motion.div
-        initial={{ opacity: 0, y: -30 }}
-        animate={cardsLanded ? { opacity: 1, y: 0 } : { opacity: 0, y: -30 }}
-        transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] as const }}
+        initial={{ opacity: 0, y: -20 }}
+        animate={cardsLanded ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+        transition={{ duration: 0.7, ease: revealEase }}
       >
-        <Navbar />
+        {children}
       </motion.div>
 
       {/* Hero Section */}
@@ -37,7 +42,7 @@ export function HeroSection() {
                 ? { opacity: 1, y: 0, filter: "blur(0px)" }
                 : { opacity: 0, y: 30, filter: "blur(10px)" }
               }
-              transition={{ duration: 0.9, ease: [0.22, 0.61, 0.36, 1] as const }}
+              transition={{ duration: 0.9, ease: revealEase }}
             >
               <HeroMagnifier>
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl font-heading text-[#2B211B] leading-tight">
@@ -54,7 +59,7 @@ export function HeroSection() {
               className="flex flex-col sm:flex-row gap-4"
               initial={{ opacity: 0, y: 20 }}
               animate={cardsLanded ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 0.61, 0.36, 1] as const }}
+              transition={{ duration: 0.7, delay: 0.25, ease: revealEase }}
             >
               <Link href="/login">
                 <Button size="lg" className="h-12 px-8 text-base font-medium rounded-full transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_15px_30px_-5px_rgba(249,115,22,0.3)] hover:bg-primary/95">
