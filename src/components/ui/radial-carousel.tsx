@@ -147,21 +147,23 @@ export function RadialCarousel({ items }: { items: any[] }) {
           const isH = hovered === i
           const isActive = d > 0.9
 
-          // ── smooth pop curve: d³ peaks sharply at front, tapers smoothly ──
-          const pop = d * d * d                          // 0 → 1 (cubic ease)
+          // ── smooth pop: clamped quadratic for a wide, always-visible lift ──
+          // d goes 0→1. Remap so pop activates broadly across the front half.
+          const popRaw = Math.max(0, (d - 0.3) / 0.7)   // 0 when d<0.3, ramps to 1
+          const pop = popRaw * popRaw                     // quadratic ease-in
 
           // ── depth-based styling ──
-          const s = isH ? 1.18 : 0.78 + pop * 0.42      // 0.78 → 1.20 (front pops bigger)
-          const op = 0.35 + d * 0.65                     // 0.35 → 1.0
-          const bl = isH ? 0 : Math.max(0, (1 - d) * 3) // 0 → 3px
-          const bright = 0.75 + d * 0.25                 // 0.75 → 1.0
-          const popY = -(pop * 40)                       // front rises up to -40px
+          const s = (isH ? 0.06 : 0) + 0.72 + pop * 0.48 // 0.72 → 1.20 (always, not hover-only)
+          const op = 0.35 + d * 0.65                       // 0.35 → 1.0
+          const bl = isH ? 0 : Math.max(0, (1 - d) * 3)   // 0 → 3px
+          const bright = 0.75 + d * 0.25                   // 0.75 → 1.0
+          const popY = -(pop * 55)                          // front rises up to -55px
           const lift = isH ? 35 : 0
 
           // ── shadow (stronger + wider at front) ──
-          const shOp = (0.06 + pop * 0.26).toFixed(2)
-          const shBl = Math.round(8 + pop * 32)
-          const shY = Math.round(4 + pop * 16)
+          const shOp = (0.06 + pop * 0.28).toFixed(2)
+          const shBl = Math.round(8 + pop * 36)
+          const shY = Math.round(4 + pop * 18)
 
           return (
             <div
