@@ -16,10 +16,20 @@ export function LoginForm() {
   const [otp, setOtp] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
+  const testerEmail = process.env.NEXT_PUBLIC_TESTER_EMAIL
+
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) {
       toast.error("Please enter your college email")
+      return
+    }
+
+    // Tester bypass: skip OTP send and auto-fill the fixed code
+    if (testerEmail && email.toLowerCase() === testerEmail.toLowerCase()) {
+      setOtp("000000")
+      setStep("otp")
+      toast.success("Tester mode — OTP auto-filled")
       return
     }
     

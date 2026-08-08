@@ -31,9 +31,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const supabase = createAdminClient()
 
-        const isSupreme = email === "mantrakhandelwaljee@gmail.com";
+        // Tester bypass: configured via TESTER_EMAIL env variable, accepts OTP "000000"
+        const testerEmail = process.env.TESTER_EMAIL
+        const isTester = testerEmail && email.toLowerCase() === testerEmail.toLowerCase()
 
-        if (!isSupreme) {
+        if (isTester) {
+          if (otp !== "000000") {
+            return null // Tester must use the fixed code
+          }
+        } else {
           // Find the latest valid OTP for this email
           const { data: otpRecords } = await (supabase.from('otps') as any)
             .select('*')
