@@ -87,7 +87,8 @@ export async function deleteJourney(journeyId: string) {
       .eq('id', journeyId)
       .single()
 
-    if (!journey || journey.user_id !== session.user.id) {
+    const isSupreme = session.user?.email === "mantrakhandelwaljee@gmail.com"
+    if (!journey || (journey.user_id !== session.user.id && !isSupreme)) {
       return { success: false, error: "You can only delete your own journeys" }
     }
 
@@ -131,7 +132,8 @@ export async function updateJourneyStatus(journeyId: string, status: string) {
       .eq('id', journeyId)
       .single()
 
-    if (!journey || journey.user_id !== session.user.id) {
+    const isSupreme = session.user?.email === "mantrakhandelwaljee@gmail.com"
+    if (!journey || (journey.user_id !== session.user.id && !isSupreme)) {
       return { success: false, error: "You can only update your own journeys" }
     }
 
@@ -171,7 +173,8 @@ export async function updateJourney(journeyId: string, data: PublishJourneyFormV
       .eq('id', journeyId)
       .single()
 
-    if (!existingJourney || existingJourney.user_id !== session.user.id) {
+    const isSupreme = session.user?.email === "mantrakhandelwaljee@gmail.com"
+    if (!existingJourney || (existingJourney.user_id !== session.user.id && !isSupreme)) {
       return { success: false, error: "You can only edit your own journeys" }
     }
 

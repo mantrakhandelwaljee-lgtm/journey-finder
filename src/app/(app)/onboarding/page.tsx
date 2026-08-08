@@ -28,8 +28,8 @@ export default async function OnboardingPage() {
           </form>
         </div>
         <CardHeader>
-          <CardTitle className="text-2xl">Complete your profile</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl font-heading tracking-[-0.02em]">Complete your profile</CardTitle>
+          <CardDescription className="font-sans">
             Tell us a bit about yourself so others can connect with you.
           </CardDescription>
         </CardHeader>

@@ -1,9 +1,9 @@
-import Link from "next/link"
 import { auth } from "@/auth"
-import { Button } from "@/components/ui/button"
-import { Navbar } from "@/components/layout/navbar"
-import { MapPin, Users, ShieldCheck, ArrowRight } from "lucide-react"
+import { MapPin, Users, ShieldCheck } from "lucide-react"
 import { redirect } from "next/navigation"
+import { SplashScreen } from "@/components/ui/splash-screen"
+import { Navbar } from "@/components/layout/navbar"
+import { HeroSection } from "@/components/landing/hero-section"
 
 export default async function LandingPage() {
   const session = await auth()
@@ -18,37 +18,12 @@ export default async function LandingPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Navbar />
+      <SplashScreen />
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="w-full py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-primary/10 via-background to-background relative overflow-hidden">
-          <div className="absolute inset-0 bg-grid-black/[0.02] -z-10" />
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="flex flex-col items-center space-y-8 text-center">
-              <div className="space-y-4 max-w-3xl">
-                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-                  Never Travel <span className="text-primary">Alone</span> Again.
-                </h1>
-                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Connect with students heading your way. Share rides to campus, the train station, or home for the holidays. 
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/login">
-                  <Button size="lg" className="h-12 px-8 text-base font-medium rounded-full">
-                    Find a Journey
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link href="/login">
-                  <Button size="lg" variant="outline" className="h-12 px-8 text-base font-medium rounded-full bg-background">
-                    Offer a Ride
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Hero with card drop animation — Navbar passed as children so it stays server-rendered */}
+        <HeroSection>
+          <Navbar />
+        </HeroSection>
 
         {/* Features Section */}
         <section className="w-full py-20 bg-muted/30">

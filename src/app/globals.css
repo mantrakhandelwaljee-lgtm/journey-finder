@@ -8,8 +8,9 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-display);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -50,23 +51,23 @@
 
 :root {
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: #2B211B;
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: #2B211B;
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: #2B211B;
+  --primary: #2B211B;
+  --primary-foreground: #FFF9F3;
+  --secondary: #FFF8F0;
+  --secondary-foreground: #7B6A5F;
+  --muted: #FFF8F0;
+  --muted-foreground: #51443B;
+  --accent: #B77B5D;
+  --accent-foreground: #FFF9F3;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: #D8C8B9;
+  --input: #D8C8B9;
+  --ring: #B77B5D;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -126,5 +127,108 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  .premium-search-container {
+    background: rgba(255, 253, 249, 0.88);
+    border: 1px solid #E7D8CB;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px rgba(65, 45, 30, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(14px);
+  }
+
+  .premium-search-label {
+    font-family: var(--font-sans), sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #6A584C;
+  }
+
+  .premium-search-input,
+  .premium-search-input:where(div, button, input) {
+    background: rgba(255, 255, 255, 0.58) !important;
+    border: 1px solid #E7D8CB !important;
+    border-radius: 14px !important;
+    color: #43362D !important;
+    font-family: var(--font-sans), sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    min-height: 50px !important;
+    transition: all 200ms ease-out !important;
+  }
+
+  .premium-search-input::placeholder {
+    color: #A89484 !important;
+  }
+
+  .premium-search-input:focus, 
+  .premium-search-input:focus-within,
+  .premium-search-input[data-state="open"] {
+    border-color: #B77B5D !important;
+    box-shadow: 0 0 0 4px rgba(183, 123, 93, 0.12) !important;
+    outline: none !important;
+  }
+
+  .premium-search-icon {
+    color: #7B6A5F;
+    transition: color 200ms ease-out;
+  }
+  
+  .premium-search-input:focus ~ .premium-search-icon, 
+  .premium-search-input:focus-within ~ .premium-search-icon {
+    color: #B77B5D;
+  }
+
+  .premium-search-btn {
+    background: linear-gradient(180deg, #3B2B22 0%, #2B211B 100%) !important;
+    color: #FFF9F3 !important;
+    border: none !important;
+    border-radius: 14px !important;
+    font-family: var(--font-sans), sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 10px 24px rgba(43, 33, 27, 0.18) !important;
+    min-height: 50px !important;
+    transition: all 200ms ease !important;
+  }
+
+  .premium-search-btn:hover {
+    background: linear-gradient(180deg, #4A352A 0%, #36281F 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 14px 30px rgba(43, 33, 27, 0.22) !important;
+  }
+
+  .premium-search-btn:active {
+    transform: translateY(0) scale(0.99) !important;
+  }
+
+  .premium-nav-link {
+    font-family: var(--font-sans), sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #51443B;
+    transition: color 200ms;
+    position: relative;
+  }
+  
+  .premium-nav-link.active {
+    color: #2B211B;
+  }
+  
+  .premium-nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #B77B5D;
+    border-radius: 2px;
   }
 }

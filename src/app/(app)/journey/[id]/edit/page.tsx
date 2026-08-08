@@ -27,7 +27,8 @@ export default async function EditJourneyPage({
     notFound()
   }
 
-  if (journey.user_id !== session.user.id) {
+  const isSupreme = session.user?.email === "mantrakhandelwaljee@gmail.com"
+  if (journey.user_id !== session.user.id && !isSupreme) {
     redirect(`/journey/${id}`)
   }
 

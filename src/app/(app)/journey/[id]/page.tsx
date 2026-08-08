@@ -69,7 +69,8 @@ export default async function JourneyDetailPage({
     .order('stop_order', { ascending: true })
 
   const user = journey.users
-  const isOwner = session.user.id === user.id
+  const isSupreme = session.user?.email === "mantrakhandelwaljee@gmail.com"
+  const isOwner = session.user.id === user.id || isSupreme
   const departureTime = new Date(journey.departure_time)
   const arrivalTime = new Date(journey.arrival_time)
 
@@ -78,14 +79,14 @@ export default async function JourneyDetailPage({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Journey Details</h1>
+          <h1 className="text-3xl font-bold tracking-[-0.03em] font-heading">Journey Details</h1>
           <p className="text-muted-foreground mt-1">
             {journey.origin_name} → {journey.destination_name}
           </p>
         </div>
         <Badge 
           variant={journey.status === 'open' ? 'default' : 'secondary'} 
-          className="w-fit text-sm px-3 py-1 uppercase tracking-wider"
+          className="w-fit text-sm px-3 py-1 uppercase tracking-wider font-mono"
         >
           {journey.status}
         </Badge>
@@ -111,14 +112,14 @@ export default async function JourneyDetailPage({
                   <div className="absolute left-0 top-1.5 w-0.5 h-full bg-gradient-to-b from-green-500 to-primary/30" />
                   <div className="relative z-10 w-4 h-4 rounded-full bg-green-500 ring-4 ring-green-500/20 shrink-0 -ml-[7px]" />
                   <div className="flex-1 -mt-0.5">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Origin</p>
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-mono">Origin</p>
                     <h3 className="font-semibold text-base mt-0.5">{journey.origin_name}</h3>
                     <div className="flex items-center gap-4 mt-1.5 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5" />
-                        {format(departureTime, "MMM d, yyyy")}
-                      </span>
-                      <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1 font-mono text-xs">
+                          <Calendar className="w-3.5 h-3.5" />
+                          {format(departureTime, "MMM d, yyyy")}
+                        </span>
+                        <span className="flex items-center gap-1 font-mono text-xs">
                         <Clock className="w-3.5 h-3.5" />
                         {format(departureTime, "h:mm a")}
                       </span>
@@ -154,7 +155,7 @@ export default async function JourneyDetailPage({
                       <div className="absolute left-0 top-0 w-0.5 h-full bg-primary/30" />
                       <div className="relative z-10 w-4 h-4 rounded-full bg-primary ring-4 ring-primary/20 shrink-0 -ml-[7px]" />
                       <div className="flex-1 -mt-0.5">
-                        <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Stop {index + 1}</p>
+                        <p className="text-xs uppercase tracking-wider text-muted-foreground font-mono">Stop {index + 1}</p>
                         <h3 className="font-medium text-base mt-0.5">{stop.stop_name}</h3>
                         <div className="flex items-center gap-4 mt-1.5 text-sm text-muted-foreground">
                           {stop.estimated_arrival && (
@@ -199,10 +200,10 @@ export default async function JourneyDetailPage({
                 <div className="flex items-start gap-5 relative">
                   <div className="relative z-10 w-4 h-4 rounded-full bg-red-500 ring-4 ring-red-500/20 shrink-0 -ml-[7px]" />
                   <div className="flex-1 -mt-0.5">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Destination</p>
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-mono">Destination</p>
                     <h3 className="font-semibold text-base mt-0.5">{journey.destination_name}</h3>
                     <div className="flex items-center gap-4 mt-1.5 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1 font-mono text-xs">
                         <Clock className="w-3.5 h-3.5" />
                         Est. {format(arrivalTime, "h:mm a")}
                       </span>
@@ -292,7 +293,7 @@ export default async function JourneyDetailPage({
             <CardContent className="p-6">
               <div className="flex flex-col items-center text-center space-y-2">
                 <Users className="w-8 h-8 text-primary" />
-                <h3 className="font-semibold text-2xl">{journey.seats_available}</h3>
+                <h3 className="font-heading font-semibold text-2xl">{journey.seats_available}</h3>
                 <p className="text-muted-foreground">Seats Available</p>
               </div>
             </CardContent>

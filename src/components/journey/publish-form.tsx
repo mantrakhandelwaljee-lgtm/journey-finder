@@ -427,7 +427,7 @@ export function PublishForm({ initialData, journeyId }: PublishFormProps = {}) {
         {errors.notes && <p className="text-sm text-destructive">{errors.notes.message}</p>}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button type="submit" className="w-full premium-search-btn h-12" disabled={isSubmitting}>
         {isSubmitting 
           ? (journeyId ? "Saving..." : "Publishing...") 
           : (journeyId ? "Save Changes" : "Publish Journey")}
