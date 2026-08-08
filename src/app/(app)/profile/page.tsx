@@ -48,7 +48,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="container max-w-5xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold tracking-tight mb-8">My Profile</h1>
+      <h1 className="text-3xl font-bold tracking-[-0.03em] font-heading mb-8">My Profile</h1>
 
       <div className="grid md:grid-cols-3 gap-8">
         {/* Profile Info */}
@@ -95,11 +95,11 @@ export default async function ProfilePage() {
 
               <div className="grid grid-cols-2 gap-3 border-t pt-4">
                 <div className="text-center p-3 bg-muted/40 rounded-lg">
-                  <p className="text-2xl font-bold text-primary">{journeys?.length || 0}</p>
+                  <p className="text-2xl font-bold text-primary font-mono tabular-nums">{journeys?.length || 0}</p>
                   <p className="text-xs text-muted-foreground">Total Journeys</p>
                 </div>
                 <div className="text-center p-3 bg-muted/40 rounded-lg">
-                  <p className="text-2xl font-bold text-green-600">{openJourneys.length}</p>
+                  <p className="text-2xl font-bold text-green-600 font-mono tabular-nums">{openJourneys.length}</p>
                   <p className="text-xs text-muted-foreground">Active</p>
                 </div>
               </div>

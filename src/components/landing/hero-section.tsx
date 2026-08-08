@@ -45,11 +45,11 @@ export function HeroSection({ children }: HeroSectionProps) {
               transition={{ duration: 0.9, ease: revealEase }}
             >
               <HeroMagnifier>
-                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl font-heading text-[#2B211B] leading-tight">
+                <h1 className="text-4xl font-bold tracking-[-0.03em] sm:text-5xl md:text-6xl lg:text-7xl font-heading text-[#2B211B] leading-[0.95]">
                   Never Travel <span className="text-[#B77B5D]">Alone</span> Again.
                 </h1>
               </HeroMagnifier>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-sans leading-[1.7]">
                 Connect with students heading your way. Share rides to campus, the train station, or home for the holidays. 
               </p>
             </motion.div>
@@ -62,13 +62,13 @@ export function HeroSection({ children }: HeroSectionProps) {
               transition={{ duration: 0.7, delay: 0.25, ease: revealEase }}
             >
               <Link href="/login">
-                <Button size="lg" className="h-12 px-8 text-base font-medium rounded-full transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_15px_30px_-5px_rgba(249,115,22,0.3)] hover:bg-primary/95">
+                <Button size="lg" className="h-12 px-8 text-base font-semibold tracking-wide rounded-full font-sans transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_15px_30px_-5px_rgba(249,115,22,0.3)] hover:bg-primary/95">
                   Find a Journey
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/login">
-                <Button size="lg" variant="outline" className="h-12 px-8 text-base font-medium rounded-full bg-background transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_15px_30px_-5px_rgba(0,0,0,0.1)] hover:bg-background">
+                <Button size="lg" variant="outline" className="h-12 px-8 text-base font-semibold tracking-wide rounded-full font-sans bg-background transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_15px_30px_-5px_rgba(0,0,0,0.1)] hover:bg-background">
                   Offer a Ride
                 </Button>
               </Link>

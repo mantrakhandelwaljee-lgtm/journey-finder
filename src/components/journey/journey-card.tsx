@@ -71,7 +71,7 @@ export function JourneyCard({ journey }: JourneyCardProps) {
           <div className="grid grid-cols-2 gap-2 pt-2 text-sm text-[#51443B] border-t border-[#E7D8CB]">
             <div className="flex items-center gap-2 mt-2 font-sans">
               <Calendar className="w-4 h-4 shrink-0 text-[#B77B5D]" />
-              <span className="truncate">{format(departureTime, "MMM d, h:mm a")}</span>
+              <span className="truncate font-mono text-xs">{format(departureTime, "MMM d, h:mm a")}</span>
             </div>
             <div className="flex items-center gap-2 mt-2 justify-end font-sans">
               <Users className="w-4 h-4 shrink-0 text-[#B77B5D]" />

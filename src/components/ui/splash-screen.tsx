@@ -63,8 +63,8 @@ export function SplashScreen() {
               transition={{ delay: 0.2 }}
               className="text-center"
             >
-              <h1 className="text-3xl font-bold tracking-tighter text-foreground">JourneyFinder</h1>
-              <p className="text-muted-foreground mt-2 font-medium">Connecting student travelers</p>
+              <h1 className="text-3xl font-bold tracking-tighter text-foreground font-heading">JourneyFinder</h1>
+              <p className="text-muted-foreground mt-2 font-serif italic">Connecting student travelers</p>
             </motion.div>
           </div>
 
@@ -77,8 +77,8 @@ export function SplashScreen() {
           >
             <div className="space-y-4">
               <div className="flex justify-between items-end px-1">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.2em]">Loading...</span>
-                <span className="text-sm font-bold text-primary">{progress}%</span>
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.2em] font-mono">Loading...</span>
+                <span className="text-sm font-bold text-primary font-mono tabular-nums">{progress}%</span>
               </div>
               <div className="h-1.5 w-full bg-primary/10 overflow-hidden rounded-full">
                 <motion.div 
